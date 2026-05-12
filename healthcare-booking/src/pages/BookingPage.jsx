@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
   Container, 
@@ -17,12 +17,9 @@ import {
   Avatar,
   useTheme, 
   alpha, 
-  IconButton,
-  Fab,
-  Zoom,
-  Tooltip
+  IconButton 
 } from '@mui/material'
-import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2, MessageCircle, X, Send } from 'lucide-react'
+import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react'
 
 import { SPECIALIZATIONS, BOOKING_STEPS } from '../constants'
 import { formatDisplayDate, formatTime, isValidEmail, isValidPhone } from '../utils/helpers'
@@ -33,11 +30,11 @@ import DoctorCard from '../components/DoctorCard'
 import DatePicker from '../components/DatePicker'
 import SlotSelector from '../components/SlotSelector'
 import ConfirmationPopup from '../components/ConfirmationPopup'
+import ChatAssistant from '../components/ChatAssistant'
 
 export default function BookingPage() {
   const theme = useTheme()
   const navigate = useNavigate()
-  const chatEndRef = useRef(null)
   
   const { 
     selectedDoctor, 
@@ -63,11 +60,6 @@ export default function BookingPage() {
   } = useDoctors()
 
   const [errors, setErrors] = useState({})
-  const [showChat, setShowChat] = useState(false)
-  const [chatInput, setChatInput] = useState('')
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! I'm your MediBook assistant. How can I help you with your booking today?", isBot: true }
-  ])
 
   const handleNext = () => setStep(currentStep + 1)
   const handleBack = () => setStep(currentStep - 1)
@@ -75,12 +67,6 @@ export default function BookingPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentStep])
-
-  useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [messages, showChat])
 
   const validateStep2 = () => {
     const newErrors = {}
@@ -110,28 +96,6 @@ export default function BookingPage() {
     }).toString()
     
     navigate(`/confirmation?${query}`)
-  }
-
-  const handleSendMessage = (text) => {
-    if (!text.trim()) return
-
-    const userMsg = { id: Date.now(), text, isBot: false }
-    setMessages(prev => [...prev, userMsg])
-    setChatInput('')
-
-    setTimeout(() => {
-      let botResponse = "I'm processing your request. Please hold on a moment."
-      
-      if (text.includes("date")) {
-        botResponse = "In Step 2, you can select any date from the weekly calendar. Click the arrows to see future weeks!"
-      } else if (text.includes("cancel")) {
-        botResponse = "Yes, you can cancel your appointment anytime through the link in your confirmation email."
-      } else if (text.includes("Support")) {
-        botResponse = "You can reach our support team at support@medibook.com or call +1-800-MED-BOOK."
-      }
-
-      setMessages(prev => [...prev, { id: Date.now() + 1, text: botResponse, isBot: true }])
-    }, 600)
   }
 
   return (
@@ -416,103 +380,7 @@ export default function BookingPage() {
         </Grid>
       </Container>
 
-      <Box sx={{ position: 'fixed', bottom: 32, right: 32, zIndex: 1000 }}>
-        <Zoom in={true}>
-          <Tooltip title="Help Assistant" placement="left">
-            <Fab 
-              color="primary" 
-              onClick={() => setShowChat(!showChat)}
-              sx={{ boxShadow: theme.shadows[10] }}
-            >
-              {showChat ? <X /> : <MessageCircle />}
-            </Fab>
-          </Tooltip>
-        </Zoom>
-
-        <Zoom in={showChat}>
-          <Paper 
-            sx={{ 
-              position: 'absolute', 
-              bottom: 80, 
-              right: 0, 
-              width: { xs: 300, sm: 350 }, 
-              height: 450, 
-              borderRadius: 4, 
-              display: 'flex', 
-              flexDirection: 'column', 
-              overflow: 'hidden',
-              boxShadow: theme.shadows[20],
-              border: '1px solid',
-              borderColor: 'divider'
-            }}
-          >
-            <Box sx={{ p: 2.5, bgcolor: 'primary.main', color: 'white' }}>
-              <Typography variant="subtitle1" fontWeight={700}>MediBook AI Assistant</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>Online • Available 24/7</Typography>
-            </Box>
-            
-            <Box sx={{ flex: 1, p: 2, bgcolor: 'grey.50', overflowY: 'auto' }}>
-              {messages.map((msg) => (
-                <Box key={msg.id} sx={{ mb: 2, display: 'flex', justifyContent: msg.isBot ? 'flex-start' : 'flex-end' }}>
-                  <Box 
-                    sx={{ 
-                      p: 1.5, 
-                      bgcolor: msg.isBot ? 'white' : 'primary.main', 
-                      color: msg.isBot ? 'text.primary' : 'white',
-                      borderRadius: msg.isBot ? '12px 12px 12px 0' : '12px 12px 0 12px', 
-                      boxShadow: theme.shadows[1], 
-                      maxWidth: '85%' 
-                    }}
-                  >
-                    <Typography variant="body2">{msg.text}</Typography>
-                  </Box>
-                </Box>
-              ))}
-              
-              <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
-                <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>Quick actions:</Typography>
-                <Chip 
-                  label="How to select a date?" 
-                  size="small" 
-                  onClick={() => handleSendMessage("How to select a date?")} 
-                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-                />
-                <Chip 
-                  label="Can I cancel later?" 
-                  size="small" 
-                  onClick={() => handleSendMessage("Can I cancel later?")} 
-                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-                />
-                <Chip 
-                  label="Contact Support" 
-                  size="small" 
-                  onClick={() => handleSendMessage("Contact Support")} 
-                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-                />
-              </Box>
-              <div ref={chatEndRef} />
-            </Box>
-
-            <Box sx={{ p: 2, bgcolor: 'white', borderTop: '1px solid', borderColor: 'divider' }}>
-              <Stack direction="row" spacing={1}>
-                <TextField 
-                  fullWidth 
-                  size="small" 
-                  placeholder="Type your message..." 
-                  variant="outlined"
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(chatInput)}
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 10 } }}
-                />
-                <IconButton color="primary" onClick={() => handleSendMessage(chatInput)}>
-                  <Send size={20} />
-                </IconButton>
-              </Stack>
-            </Box>
-          </Paper>
-        </Zoom>
-      </Box>
+      <ChatAssistant />
 
       <ConfirmationPopup
         open={isConfirming}
