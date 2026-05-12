@@ -17,9 +17,12 @@ import {
   Avatar,
   useTheme, 
   alpha, 
-  IconButton 
+  IconButton,
+  Fab,
+  Zoom,
+  Tooltip
 } from '@mui/material'
-import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2, MessageCircle, X, Send } from 'lucide-react'
 
 import { SPECIALIZATIONS, BOOKING_STEPS } from '../constants'
 import { formatDisplayDate, formatTime, isValidEmail, isValidPhone } from '../utils/helpers'
@@ -59,6 +62,7 @@ export default function BookingPage() {
   } = useDoctors()
 
   const [errors, setErrors] = useState({})
+  const [showChat, setShowChat] = useState(false)
 
   const handleNext = () => setStep(currentStep + 1)
   const handleBack = () => setStep(currentStep - 1)
@@ -374,20 +378,80 @@ export default function BookingPage() {
                   </Paper>
                 </Box>
               )}
-
-              <Paper sx={{ p: 3, borderRadius: 4, bgcolor: 'grey.900', color: 'white' }}>
-                <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1 }}>Need help?</Typography>
-                <Typography variant="body2" sx={{ opacity: 0.7, mb: 2.5 }}>
-                  Our support team is available 24/7 to assist you with your booking.
-                </Typography>
-                <Button variant="contained" color="inherit" fullWidth sx={{ color: 'grey.900', fontWeight: 700 }}>
-                  Contact Support
-                </Button>
-              </Paper>
             </Stack>
           </Grid>
         </Grid>
       </Container>
+
+      <Box sx={{ position: 'fixed', bottom: 32, right: 32, zIndex: 1000 }}>
+        <Zoom in={true}>
+          <Tooltip title="Help Assistant" placement="left">
+            <Fab 
+              color="primary" 
+              onClick={() => setShowChat(!showChat)}
+              sx={{ boxShadow: theme.shadows[10] }}
+            >
+              {showChat ? <X /> : <MessageCircle />}
+            </Fab>
+          </Tooltip>
+        </Zoom>
+
+        <Zoom in={showChat}>
+          <Paper 
+            sx={{ 
+              position: 'absolute', 
+              bottom: 80, 
+              right: 0, 
+              width: { xs: 300, sm: 350 }, 
+              height: 450, 
+              borderRadius: 4, 
+              display: 'flex', 
+              flexDirection: 'column', 
+              overflow: 'hidden',
+              boxShadow: theme.shadows[20],
+              border: '1px solid',
+              borderColor: 'divider'
+            }}
+          >
+            <Box sx={{ p: 2.5, bgcolor: 'primary.main', color: 'white' }}>
+              <Typography variant="subtitle1" fontWeight={700}>MediBook AI Assistant</Typography>
+              <Typography variant="caption" sx={{ opacity: 0.8 }}>Online • Available 24/7</Typography>
+            </Box>
+            
+            <Box sx={{ flex: 1, p: 2, bgcolor: 'grey.50', overflowY: 'auto' }}>
+              <Box sx={{ mb: 2, display: 'flex' }}>
+                <Box sx={{ p: 1.5, bgcolor: 'white', borderRadius: '12px 12px 12px 0', boxShadow: theme.shadows[1], maxWidth: '85%' }}>
+                  <Typography variant="body2">
+                    Hello! I'm your MediBook assistant. How can I help you with your booking today?
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Box sx={{ mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
+                <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>Quick actions:</Typography>
+                <Chip label="How to select a date?" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
+                <Chip label="Can I cancel later?" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
+                <Chip label="Contact Support" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
+              </Box>
+            </Box>
+
+            <Box sx={{ p: 2, bgcolor: 'white', borderTop: '1px solid', borderColor: 'divider' }}>
+              <Stack direction="row" spacing={1}>
+                <TextField 
+                  fullWidth 
+                  size="small" 
+                  placeholder="Type your message..." 
+                  variant="outlined"
+                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 10 } }}
+                />
+                <IconButton color="primary">
+                  <Send size={20} />
+                </IconButton>
+              </Stack>
+            </Box>
+          </Paper>
+        </Zoom>
+      </Box>
 
       <ConfirmationPopup
         open={isConfirming}
