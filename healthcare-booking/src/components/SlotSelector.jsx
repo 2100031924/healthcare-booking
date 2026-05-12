@@ -8,9 +8,8 @@ import {
   Stack,
   alpha,
   useTheme,
-  Divider
 } from '@mui/material'
-import { Clock, Sun, CloudSun, Moon } from 'lucide-react'
+import { Clock, Sun, CloudSun, Moon, Sparkles } from 'lucide-react'
 import { formatTime } from '../utils/helpers'
 
 export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
@@ -34,13 +33,27 @@ export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
 
   if (!slots.length || availableSlotsCount === 0) {
     return (
-      <Paper sx={{ p: 4, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <Clock size={40} color={theme.palette.text.disabled} style={{ margin: '0 auto 16px' }} />
-        <Typography variant="h6" color="text.secondary" gutterBottom>
-          No slots available
+      <Paper 
+        elevation={0}
+        sx={{ 
+          p: 4, 
+          textAlign: 'center', 
+          height: '100%', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          justifyContent: 'center',
+          border: '1px solid',
+          borderColor: 'grey.100',
+          borderRadius: 4,
+          bgcolor: 'grey.50'
+        }}
+      >
+        <Clock size={48} color={theme.palette.text.disabled} style={{ margin: '0 auto 20px', opacity: 0.5 }} />
+        <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.secondary' }}>
+          No Slots Available
         </Typography>
-        <Typography variant="body2" color="text.disabled">
-          Please try selecting another date or doctor.
+        <Typography variant="body2" sx={{ color: 'text.disabled', maxWidth: 200, mx: 'auto', mt: 1 }}>
+          Please try another date or doctor for more options.
         </Typography>
       </Paper>
     )
@@ -50,14 +63,14 @@ export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
     if (groupSlots.length === 0) return null
 
     return (
-      <Box sx={{ mb: 3 }}>
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1.5 }}>
-          {icon}
-          <Typography variant="subtitle2" color="text.secondary" fontWeight={600} sx={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <Box sx={{ mb: 4 }}>
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
+          <Box sx={{ color: 'text.secondary', display: 'flex', p: 0.75, borderRadius: '8px', bgcolor: 'grey.50' }}>{icon}</Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'text.primary', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.75rem' }}>
             {title}
           </Typography>
         </Stack>
-        <Grid container spacing={1}>
+        <Grid container spacing={1.5}>
           {groupSlots.map((slot, i) => {
             const isSelected = selectedSlot?.time === slot.time
             return (
@@ -68,22 +81,28 @@ export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
                   disabled={!slot.available}
                   onClick={() => onSelectSlot(slot)}
                   sx={{
-                    py: 1,
-                    px: 0.5,
-                    fontSize: '0.8rem',
-                    borderRadius: 2,
-                    borderColor: isSelected ? 'primary.main' : 'divider',
-                    bgcolor: isSelected ? 'primary.main' : 'background.paper',
+                    py: 1.25,
+                    borderRadius: '12px',
+                    borderColor: isSelected ? 'transparent' : 'grey.200',
+                    background: isSelected 
+                      ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)` 
+                      : '#ffffff',
                     color: isSelected ? 'white' : slot.available ? 'text.primary' : 'text.disabled',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    boxShadow: isSelected ? '0 4px 12px rgba(79, 70, 229, 0.25)' : 'none',
                     '&:hover': {
-                      bgcolor: isSelected ? 'primary.main' : alpha(theme.palette.primary.main, 0.05),
-                      borderColor: 'primary.main',
+                      background: isSelected 
+                        ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)` 
+                        : alpha(theme.palette.primary.main, 0.05),
+                      borderColor: theme.palette.primary.main,
+                      transform: 'translateY(-2px)',
                     },
                     '&.Mui-disabled': {
-                      bgcolor: alpha(theme.palette.grey[100], 0.5),
-                      borderColor: 'divider',
-                      color: 'text.disabled',
+                      bgcolor: 'grey.50',
+                      borderColor: 'grey.100',
                       textDecoration: 'line-through',
+                      opacity: 0.6
                     }
                   }}
                 >
@@ -98,35 +117,43 @@ export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
   }
 
   return (
-    <Paper sx={{ p: 3, height: '100%' }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Box
-            sx={{
-              p: 1,
-              borderRadius: 2,
-              bgcolor: alpha(theme.palette.success.main, 0.1),
-              color: 'success.main',
-              display: 'flex',
-            }}
-          >
-            <Clock size={20} />
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>
-              Available Time Slots
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {availableSlotsCount} slots found
-            </Typography>
-          </Box>
-        </Stack>
+    <Paper 
+      elevation={0}
+      sx={{ 
+        p: 3, 
+        height: '100%', 
+        border: '1px solid', 
+        borderColor: 'grey.100',
+        borderRadius: 4,
+        background: '#ffffff'
+      }}
+    >
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
+        <Box
+          sx={{
+            p: 1.25,
+            borderRadius: '12px',
+            bgcolor: alpha(theme.palette.success.main, 0.08),
+            color: 'success.main',
+            display: 'flex',
+          }}
+        >
+          <Clock size={20} />
+        </Box>
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1 }}>
+            Available Slots
+          </Typography>
+          <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+            {availableSlotsCount} Times Found
+          </Typography>
+        </Box>
       </Stack>
 
-      <Box sx={{ mt: 2 }}>
-        {renderSlotGroup('Morning', <Sun size={14} color="#f59e0b" />, groupedSlots.morning)}
-        {renderSlotGroup('Afternoon', <CloudSun size={14} color="#f59e0b" />, groupedSlots.afternoon)}
-        {renderSlotGroup('Evening', <Moon size={14} color="#6366f1" />, groupedSlots.evening)}
+      <Box>
+        {renderSlotGroup('Morning', <Sun size={16} color="#f59e0b" />, groupedSlots.morning)}
+        {renderSlotGroup('Afternoon', <CloudSun size={16} color="#f59e0b" />, groupedSlots.afternoon)}
+        {renderSlotGroup('Evening', <Moon size={16} color="#6366f1" />, groupedSlots.evening)}
       </Box>
 
       {selectedSlot && (
@@ -134,24 +161,25 @@ export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
           sx={{
             mt: 2,
             p: 2,
-            borderRadius: 2,
-            bgcolor: alpha(theme.palette.success.main, 0.05),
+            borderRadius: 3,
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
             border: '1px dashed',
-            borderColor: alpha(theme.palette.success.main, 0.2),
+            borderColor: alpha(theme.palette.primary.main, 0.2),
             display: 'flex',
             alignItems: 'center',
-            gap: 1.5
+            gap: 2,
+            animation: 'fadeIn 0.4s ease-out'
           }}
         >
-          <Box sx={{ color: 'success.main' }}>
-            <Clock size={18} />
+          <Box sx={{ color: 'primary.main', display: 'flex' }}>
+            <Sparkles size={20} />
           </Box>
           <Box>
-            <Typography variant="caption" color="success.main" fontWeight={700} sx={{ display: 'block', textTransform: 'uppercase' }}>
-              Selected Time
+            <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Confirmed Selection
             </Typography>
-            <Typography variant="body2" fontWeight={600}>
-              {formatTime(selectedSlot.time)}
+            <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.primary' }}>
+              {formatTime(selectedSlot.time)} Appointment
             </Typography>
           </Box>
         </Box>

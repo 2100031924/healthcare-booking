@@ -6,11 +6,10 @@ import {
   Chip, 
   Avatar, 
   Box, 
-  Rating,
-  Stack,
-  Divider,
-  alpha,
-  useTheme
+  Stack, 
+  Divider, 
+  alpha, 
+  useTheme 
 } from '@mui/material'
 import { 
   Clock, 
@@ -18,7 +17,8 @@ import {
   Languages, 
   Star,
   CheckCircle2,
-  Calendar
+  Calendar,
+  ChevronRight
 } from 'lucide-react'
 
 export default function DoctorCard({ doctor, isSelected, onSelect }) {
@@ -34,14 +34,22 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
         flexDirection: 'column',
         cursor: 'pointer',
         position: 'relative',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        overflow: 'hidden',
+        background: isSelected 
+          ? `linear-gradient(to bottom, ${alpha(theme.palette.primary.main, 0.05)}, #ffffff)` 
+          : '#ffffff',
         border: '1px solid',
-        borderColor: isSelected ? 'primary.main' : 'divider',
-        bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.02) : 'background.paper',
+        borderColor: isSelected ? theme.palette.primary.main : theme.palette.grey[200],
         '&:hover': {
-          borderColor: 'primary.main',
+          borderColor: theme.palette.primary.main,
           transform: 'translateY(-4px)',
-          boxShadow: theme.shadows[3],
+          '& .doctor-image': {
+            transform: 'scale(1.05)',
+          },
+          '& .action-button': {
+            background: theme.palette.primary.main,
+            color: '#fff',
+          }
         },
       }}
     >
@@ -49,10 +57,11 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
         <Box
           sx={{
             position: 'absolute',
-            top: 12,
-            right: 12,
-            zIndex: 1,
+            top: 16,
+            right: 16,
+            zIndex: 2,
             color: 'primary.main',
+            animation: 'scaleIn 0.3s ease-out',
           }}
         >
           <CheckCircle2 size={24} fill={theme.palette.primary.main} color="white" />
@@ -60,118 +69,102 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
       )}
 
       <CardContent sx={{ p: 3, flexGrow: 1 }}>
-        <Stack direction="row" spacing={2.5} alignItems="flex-start">
+        <Stack direction="row" spacing={2.5} alignItems="center">
           <Box sx={{ position: 'relative' }}>
             <Avatar
               src={doctor.image}
               alt={doctor.name}
+              className="doctor-image"
               sx={{ 
-                width: 80, 
-                height: 80, 
-                borderRadius: 3,
-                boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+                width: 72, 
+                height: 72, 
+                borderRadius: '16px',
+                transition: 'transform 0.3s ease',
+                boxShadow: '0 8px 16px -4px rgba(0,0,0,0.1)',
               }}
             />
-            {availableSlotsCount > 0 && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: -4,
-                  right: -4,
-                  bgcolor: 'success.main',
-                  width: 14,
-                  height: 14,
-                  borderRadius: '50%',
-                  border: '2px solid white',
-                }}
-              />
-            )}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: -2,
+                right: -2,
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                bgcolor: availableSlotsCount > 0 ? 'success.main' : 'grey.400',
+                border: '3px solid white',
+              }}
+            />
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <Box>
-                <Typography variant="h6" sx={{ fontSize: '1.1rem', mb: 0.25 }}>
-                  {doctor.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 1 }}>
-                  {doctor.title}
-                </Typography>
-              </Box>
-            </Stack>
-
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 1.5 }}>
-              <Chip
-                label={doctor.specialization}
-                size="small"
-                sx={{
-                  textTransform: 'capitalize',
-                  bgcolor: alpha(theme.palette.primary.main, 0.1),
-                  color: 'primary.main',
-                  fontWeight: 600,
-                }}
-              />
+            <Typography variant="h6" sx={{ fontSize: '1rem', mb: 0.5, lineHeight: 1.2 }}>
+              {doctor.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 1.5 }}>
+              {doctor.title}
+            </Typography>
+            <Stack direction="row" spacing={1} alignItems="center">
               <Stack direction="row" alignItems="center" spacing={0.5} sx={{ color: '#f59e0b' }}>
                 <Star size={14} fill="#f59e0b" />
-                <Typography variant="caption" fontWeight={700}>
+                <Typography variant="caption" fontWeight={700} color="text.primary">
                   {doctor.rating}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  ({doctor.reviews} reviews)
-                </Typography>
               </Stack>
+              <Typography variant="caption" color="text.secondary">•</Typography>
+              <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                {doctor.reviews} Reviews
+              </Typography>
             </Stack>
           </Box>
         </Stack>
 
-        <Box sx={{ mt: 2.5 }}>
-          <Stack spacing={1.25}>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <Clock size={16} color={theme.palette.text.secondary} />
-              <Typography variant="body2" color="text.secondary">
-                <strong>{doctor.experience} years</strong> professional experience
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <GraduationCap size={16} color={theme.palette.text.secondary} />
-              <Typography variant="body2" color="text.secondary" noWrap>
-                {doctor.education}
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <Languages size={16} color={theme.palette.text.secondary} />
-              <Typography variant="body2" color="text.secondary">
-                {doctor.languages.join(', ')}
-              </Typography>
-            </Stack>
+        <Box sx={{ mt: 3 }}>
+          <Stack spacing={1.5}>
+            <InfoRow icon={<Clock size={16} />} label={`${doctor.experience} Years Exp`} />
+            <InfoRow icon={<GraduationCap size={16} />} label={doctor.education} />
+            <InfoRow icon={<Languages size={16} />} label={doctor.languages.join(', ')} />
           </Stack>
+        </Box>
+
+        <Box sx={{ mt: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+          <Chip
+            label={doctor.specialization}
+            size="small"
+            sx={{
+              textTransform: 'capitalize',
+              bgcolor: alpha(theme.palette.primary.main, 0.08),
+              color: 'primary.main',
+              fontWeight: 700,
+              fontSize: '0.7rem',
+              height: 24,
+            }}
+          />
         </Box>
       </CardContent>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ opacity: 0.6 }} />
 
-      <Box sx={{ p: 2, bgcolor: isSelected ? 'transparent' : alpha(theme.palette.grey[50], 0.5) }}>
+      <Box sx={{ p: 2.5, bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.02) : 'transparent' }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" spacing={0.5} alignItems="center">
-            <Calendar size={14} color={availableSlotsCount > 0 ? theme.palette.success.main : theme.palette.text.disabled} />
-            <Typography
-              variant="caption"
-              fontWeight={600}
-              sx={{ color: availableSlotsCount > 0 ? 'success.main' : 'text.disabled' }}
-            >
-              {availableSlotsCount} slots available today
+          <Box>
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Availability
             </Typography>
-          </Stack>
+            <Typography variant="body2" fontWeight={700} color={availableSlotsCount > 0 ? 'success.main' : 'text.disabled'}>
+              {availableSlotsCount} Slots Left
+            </Typography>
+          </Box>
           <Button
+            className="action-button"
             variant={isSelected ? 'contained' : 'outlined'}
             size="small"
-            onClick={(e) => {
-              e.stopPropagation()
-              onSelect()
-            }}
+            endIcon={!isSelected && <ChevronRight size={14} />}
             sx={{
-              minWidth: 100,
-              borderRadius: 2,
+              borderRadius: '8px',
+              px: isSelected ? 3 : 2,
+              fontWeight: 700,
+              fontSize: '0.75rem',
             }}
           >
             {isSelected ? 'Selected' : 'Book Now'}
@@ -179,5 +172,16 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
         </Stack>
       </Box>
     </Card>
+  )
+}
+
+function InfoRow({ icon, label }) {
+  return (
+    <Stack direction="row" spacing={1.5} alignItems="center">
+      <Box sx={{ color: 'text.secondary', display: 'flex' }}>{icon}</Box>
+      <Typography variant="body2" color="text.secondary" noWrap sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
+        {label}
+      </Typography>
+    </Stack>
   )
 }

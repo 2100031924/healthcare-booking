@@ -17,9 +17,10 @@ import {
   Avatar,
   useTheme, 
   alpha, 
-  IconButton 
+  IconButton,
+  Divider
 } from '@mui/material'
-import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2, Heart, Award, Shield } from 'lucide-react'
 
 import { SPECIALIZATIONS, BOOKING_STEPS } from '../constants'
 import { formatDisplayDate, formatTime, isValidEmail, isValidPhone } from '../utils/helpers'
@@ -104,8 +105,8 @@ export default function BookingPage() {
         sx={{ 
           bgcolor: 'primary.main', 
           color: 'white', 
-          pt: 6, 
-          pb: 12, 
+          pt: { xs: 8, md: 10 }, 
+          pb: { xs: 14, md: 18 }, 
           px: 2,
           backgroundImage: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
           position: 'relative',
@@ -115,33 +116,94 @@ export default function BookingPage() {
         <Box 
           sx={{ 
             position: 'absolute', 
-            top: -50, 
-            right: -50, 
-            width: 300, 
-            height: 300, 
+            top: -100, 
+            right: -100, 
+            width: 400, 
+            height: 400, 
             borderRadius: '50%', 
-            bgcolor: alpha('#fff', 0.05) 
+            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%)' 
           }} 
         />
+        <Box 
+          sx={{ 
+            position: 'absolute', 
+            bottom: -50, 
+            left: '10%', 
+            width: 200, 
+            height: 200, 
+            borderRadius: '50%', 
+            background: 'radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%)' 
+          }} 
+        />
+        
         <Container maxWidth="lg">
-          <Typography variant="h3" fontWeight={800} gutterBottom sx={{ fontSize: { xs: '2rem', md: '2.5rem' } }}>
-            Healthcare Booking
-          </Typography>
-          <Typography variant="h6" sx={{ opacity: 0.8, fontWeight: 400, maxWidth: 600 }}>
-            Book appointments with the best doctors in your area. Quick, easy, and reliable.
-          </Typography>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={7}>
+              <Stack spacing={3}>
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1, bgcolor: alpha('#fff', 0.1), px: 2, py: 0.75, borderRadius: 10, width: 'fit-content', border: '1px solid rgba(255,255,255,0.2)' }}>
+                  <Award size={16} />
+                  <Typography variant="caption" sx={{ fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                    Trusted Healthcare Partner
+                  </Typography>
+                </Box>
+                <Typography variant="h2" sx={{ fontSize: { xs: '2.5rem', md: '3.5rem' }, lineHeight: 1.1 }}>
+                  Your Health, <br />
+                  <span style={{ opacity: 0.7 }}>Our Priority.</span>
+                </Typography>
+                <Typography variant="h6" sx={{ opacity: 0.8, fontWeight: 400, maxWidth: 500, fontSize: '1.1rem' }}>
+                  Connect with world-class specialists and book your appointment in seconds. Simplified healthcare at your fingertips.
+                </Typography>
+                <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
+                  <FeatureItem icon={<Heart size={20} />} text="Expert Care" />
+                  <FeatureItem icon={<Shield size={20} />} text="Secure Booking" />
+                </Stack>
+              </Stack>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ mt: -8 }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -10 } }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
-            <Paper sx={{ p: 3, mb: 4, borderRadius: 4, boxShadow: theme.shadows[1] }}>
-              <Stepper activeStep={currentStep} alternativeLabel>
+            <Paper 
+              elevation={0}
+              sx={{ 
+                p: { xs: 3, md: 4 }, 
+                mb: 4, 
+                borderRadius: 4, 
+                boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)',
+                background: '#ffffff',
+                border: '1px solid',
+                borderColor: 'grey.100'
+              }} 
+            >
+              <Stepper activeStep={currentStep} alternativeLabel sx={{ '& .MuiStepConnector-line': { borderTopWidth: 2 } }}>
                 {BOOKING_STEPS.map((step) => (
                   <Step key={step.id}>
-                    <StepLabel>
-                      <Typography variant="caption" fontWeight={600}>{step.label}</Typography>
+                    <StepLabel
+                      StepIconProps={{
+                        sx: {
+                          width: 38,
+                          height: 38,
+                          '& .MuiStepIcon-text': { fontWeight: 700, fontSize: '0.85rem' }
+                        }
+                      }}
+                    >
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          fontWeight: 800, 
+                          textTransform: 'uppercase', 
+                          letterSpacing: '0.08em',
+                          fontSize: '0.65rem',
+                          mt: 1,
+                          display: 'block',
+                          color: 'text.primary'
+                        }}
+                      >
+                        {step.label}
+                      </Typography>
                     </StepLabel>
                   </Step>
                 ))}
@@ -151,34 +213,49 @@ export default function BookingPage() {
             <Box sx={{ minHeight: 400 }}>
               {currentStep === 0 && (
                 <Box className="fade-in">
-                  <Paper sx={{ p: 3, mb: 4, borderRadius: 4 }}>
+                  <Paper 
+                    elevation={0}
+                    sx={{ 
+                      p: 3, 
+                      mb: 4, 
+                      borderRadius: 4,
+                      border: '1px solid',
+                      borderColor: 'grey.100',
+                      background: '#ffffff'
+                    }}
+                  >
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
                       <TextField
                         fullWidth
-                        placeholder="Search by doctor name..."
+                        placeholder="Search for a doctor, clinic or specialty..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <Search size={20} color={theme.palette.text.secondary} />
+                              <Search size={20} color={theme.palette.primary.main} />
                             </InputAdornment>
                           ),
                         }}
                       />
                     </Stack>
 
-                    <Box sx={{ mt: 3 }}>
-                      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Filter size={16} /> Filter by Specialty
+                    <Box sx={{ mt: 4 }}>
+                      <Typography variant="subtitle2" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1.5, fontWeight: 800, color: 'text.primary', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        <Filter size={18} /> Filter by Specialist
                       </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
                         <Chip
                           label="All Specialties"
                           onClick={() => setSpecialization('')}
                           variant={specialization === '' ? 'filled' : 'outlined'}
                           color={specialization === '' ? 'primary' : 'default'}
-                          sx={{ fontWeight: 600 }}
+                          sx={{ 
+                            px: 1, 
+                            height: 36,
+                            transition: 'all 0.2s',
+                            '&:hover': { transform: 'translateY(-1px)' }
+                          }}
                         />
                         {SPECIALIZATIONS.map((spec) => (
                           <Chip
@@ -187,16 +264,26 @@ export default function BookingPage() {
                             onClick={() => setSpecialization(spec.id)}
                             variant={specialization === spec.id ? 'filled' : 'outlined'}
                             color={specialization === spec.id ? 'primary' : 'default'}
-                            sx={{ fontWeight: 600 }}
+                            sx={{ 
+                              px: 1, 
+                              height: 36,
+                              transition: 'all 0.2s',
+                              '&:hover': { transform: 'translateY(-1px)' }
+                            }}
                           />
                         ))}
                       </Box>
                     </Box>
                   </Paper>
 
-                  <Typography variant="h6" fontWeight={700} sx={{ mb: 3 }}>
-                    Available Doctors ({filteredDoctors.length})
-                  </Typography>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 800 }}>
+                      Available Specialists
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                      Showing {filteredDoctors.length} results
+                    </Typography>
+                  </Stack>
 
                   <Grid container spacing={3}>
                     {filteredDoctors.map((doc) => (
@@ -210,16 +297,16 @@ export default function BookingPage() {
                     ))}
                     {filteredDoctors.length === 0 && (
                       <Grid item xs={12}>
-                        <Paper sx={{ p: 8, textAlign: 'center', bgcolor: alpha(theme.palette.grey[100], 0.5) }}>
-                          <Search size={48} color={theme.palette.text.disabled} style={{ margin: '0 auto 16px' }} />
-                          <Typography variant="h6" color="text.secondary">No doctors found</Typography>
-                          <Typography variant="body2" color="text.disabled">Try adjusting your filters or search query</Typography>
+                        <Paper sx={{ p: 8, textAlign: 'center', bgcolor: 'grey.50', borderRadius: 4, border: '2px dashed', borderColor: 'grey.200' }}>
+                          <Search size={48} color={theme.palette.text.disabled} style={{ margin: '0 auto 20px', opacity: 0.5 }} />
+                          <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.secondary' }}>No Doctors Found</Typography>
+                          <Typography variant="body2" color="text.disabled" sx={{ mt: 1 }}>Try adjusting your filters or search terms.</Typography>
                           <Button 
-                            variant="text" 
+                            variant="outlined" 
                             onClick={() => { setSearchQuery(''); setSpecialization(''); }}
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 3, borderRadius: 2 }}
                           >
-                            Clear all filters
+                            Reset Filters
                           </Button>
                         </Paper>
                       </Grid>
@@ -233,18 +320,23 @@ export default function BookingPage() {
                   <Button 
                     startIcon={<ArrowLeft size={18} />} 
                     onClick={handleBack}
-                    sx={{ mb: 3 }}
+                    sx={{ mb: 4, color: 'text.secondary', fontWeight: 700 }}
                   >
-                    Back to doctors
+                    Back to Doctors
                   </Button>
                   
-                  <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
-                    <Avatar src={selectedDoctor?.image} sx={{ width: 64, height: 64, borderRadius: 2 }} />
-                    <Box>
-                      <Typography variant="h6" fontWeight={700}>{selectedDoctor?.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">{selectedDoctor?.title}</Typography>
-                    </Box>
-                  </Stack>
+                  <Paper sx={{ p: 3, mb: 4, borderRadius: 4, border: '1px solid', borderColor: 'grey.100' }}>
+                    <Stack direction="row" spacing={3} alignItems="center">
+                      <Avatar 
+                        src={selectedDoctor?.image} 
+                        sx={{ width: 80, height: 80, borderRadius: 4, boxShadow: '0 8px 16px -4px rgba(0,0,0,0.1)' }} 
+                      />
+                      <Box>
+                        <Typography variant="h5" sx={{ fontWeight: 800 }}>{selectedDoctor?.name}</Typography>
+                        <Typography variant="subtitle1" sx={{ color: 'primary.main', fontWeight: 700 }}>{selectedDoctor?.title}</Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
 
                   <Grid container spacing={3}>
                     <Grid item xs={12} lg={6}>
@@ -262,16 +354,16 @@ export default function BookingPage() {
                     </Grid>
                   </Grid>
 
-                  <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Box sx={{ mt: 5, display: 'flex', justifyContent: 'flex-end' }}>
                     <Button
                       variant="contained"
                       size="large"
                       disabled={!selectedDate || !selectedSlot}
                       onClick={handleNext}
                       endIcon={<ArrowRight size={20} />}
-                      sx={{ px: 6, borderRadius: 3 }}
+                      sx={{ px: 8, py: 2, borderRadius: 3, fontSize: '1rem' }}
                     >
-                      Continue
+                      Confirm Time Slot
                     </Button>
                   </Box>
                 </Box>
@@ -282,26 +374,26 @@ export default function BookingPage() {
                   <Button 
                     startIcon={<ArrowLeft size={18} />} 
                     onClick={handleBack}
-                    sx={{ mb: 3 }}
+                    sx={{ mb: 4, color: 'text.secondary', fontWeight: 700 }}
                   >
-                    Back to date & time
+                    Back to Selection
                   </Button>
 
-                  <Paper sx={{ p: 4, borderRadius: 4 }}>
-                    <Typography variant="h6" fontWeight={700} sx={{ mb: 3 }}>
+                  <Paper elevation={0} sx={{ p: { xs: 3, md: 5 }, borderRadius: 4, border: '1px solid', borderColor: 'grey.100' }}>
+                    <Typography variant="h5" sx={{ fontWeight: 800, mb: 4 }}>
                       Patient Information
                     </Typography>
                     
-                    <Grid container spacing={3}>
+                    <Grid container spacing={4}>
                       <Grid item xs={12}>
                         <TextField
                           fullWidth
-                          label="Full Name"
+                          label="Your Full Name"
                           value={patientDetails.name}
                           onChange={(e) => setPatientDetails({ name: e.target.value })}
                           error={!!errors.name}
                           helperText={errors.name}
-                          placeholder="Enter your full name"
+                          placeholder="John Doe"
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -312,7 +404,7 @@ export default function BookingPage() {
                           onChange={(e) => setPatientDetails({ email: e.target.value })}
                           error={!!errors.email}
                           helperText={errors.email}
-                          placeholder="yourname@example.com"
+                          placeholder="john@example.com"
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -330,24 +422,24 @@ export default function BookingPage() {
                         <TextField
                           fullWidth
                           multiline
-                          rows={3}
+                          rows={4}
                           label="Reason for Visit (Optional)"
                           value={patientDetails.reason}
                           onChange={(e) => setPatientDetails({ reason: e.target.value })}
-                          placeholder="Briefly describe your symptoms or reason for the appointment"
+                          placeholder="Briefly describe why you are booking this appointment..."
                         />
                       </Grid>
                     </Grid>
 
-                    <Box sx={{ mt: 5 }}>
+                    <Box sx={{ mt: 6 }}>
                       <Button
                         fullWidth
                         variant="contained"
                         size="large"
                         onClick={handleReviewBooking}
-                        sx={{ py: 2, borderRadius: 3, fontWeight: 700, fontSize: '1.1rem' }}
+                        sx={{ py: 2.5, borderRadius: 3, fontWeight: 800, fontSize: '1.1rem' }}
                       >
-                        Review & Book Appointment
+                        Finalize Appointment
                       </Button>
                     </Box>
                   </Paper>
@@ -357,24 +449,78 @@ export default function BookingPage() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Stack spacing={3}>
+            <Stack spacing={4}>
               {selectedDoctor && (
                 <Box className="fade-in">
-                  <Paper sx={{ p: 3, borderRadius: 4, bgcolor: alpha(theme.palette.primary.main, 0.03), border: '1px solid', borderColor: alpha(theme.palette.primary.main, 0.1) }}>
-                    <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>Booking Summary</Typography>
+                  <Paper 
+                    elevation={0}
+                    sx={{ 
+                      p: 4, 
+                      borderRadius: 4, 
+                      bgcolor: alpha(theme.palette.primary.main, 0.03), 
+                      border: '2px solid', 
+                      borderColor: alpha(theme.palette.primary.main, 0.1),
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <Box sx={{ position: 'absolute', top: -20, right: -20, color: alpha(theme.palette.primary.main, 0.05) }}>
+                      <Calendar size={120} />
+                    </Box>
+                    <Typography variant="h6" sx={{ fontWeight: 800, mb: 3, color: 'primary.main' }}>Appointment Summary</Typography>
                     
-                    <Stack spacing={2}>
-                      <SummaryItem icon={<User size={16} />} label="Doctor" value={selectedDoctor.name} />
+                    <Stack spacing={3}>
+                      <SummaryItem icon={<User size={18} />} label="Specialist" value={selectedDoctor.name} />
                       {selectedDate && (
-                        <SummaryItem icon={<Calendar size={16} />} label="Date" value={formatDisplayDate(selectedDate.toISOString())} />
+                        <SummaryItem icon={<Calendar size={18} />} label="Appointment Date" value={formatDisplayDate(selectedDate.toISOString())} />
                       )}
                       {selectedSlot && (
-                        <SummaryItem icon={<CheckCircle2 size={16} />} label="Time" value={formatTime(selectedSlot.time)} />
+                        <SummaryItem icon={<CheckCircle2 size={18} />} label="Selected Time" value={formatTime(selectedSlot.time)} />
                       )}
                     </Stack>
+                    
+                    <Divider sx={{ my: 3, opacity: 0.5 }} />
+                    
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Box sx={{ p: 1, borderRadius: 2, bgcolor: 'success.main', color: 'white', display: 'flex' }}>
+                        <Shield size={16} />
+                      </Box>
+                      <Typography variant="caption" sx={{ fontWeight: 600, color: 'text.secondary' }}>
+                        Your data is encrypted and protected.
+                      </Typography>
+                    </Box>
                   </Paper>
                 </Box>
               )}
+
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  p: 4, 
+                  borderRadius: 4, 
+                  bgcolor: 'grey.900', 
+                  color: 'white',
+                  backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 90%)'
+                }}
+              >
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5 }}>Need Immediate Help?</Typography>
+                <Typography variant="body2" sx={{ opacity: 0.7, mb: 3, lineHeight: 1.6 }}>
+                  Our medical coordinators are available 24/7 to assist with your booking or medical inquiries.
+                </Typography>
+                <Button 
+                  variant="contained" 
+                  color="inherit" 
+                  fullWidth 
+                  sx={{ 
+                    bgcolor: '#fff', 
+                    color: 'grey.900', 
+                    fontWeight: 800,
+                    '&:hover': { bgcolor: 'grey.100' }
+                  }}
+                >
+                  Contact Support
+                </Button>
+              </Paper>
             </Stack>
           </Grid>
         </Grid>
@@ -397,12 +543,23 @@ export default function BookingPage() {
 
 function SummaryItem({ icon, label, value }) {
   return (
-    <Stack direction="row" spacing={1.5} alignItems="flex-start">
-      <Box sx={{ mt: 0.5, color: 'primary.main' }}>{icon}</Box>
+    <Stack direction="row" spacing={2} alignItems="flex-start">
+      <Box sx={{ mt: 0.5, color: 'primary.main', display: 'flex' }}>{icon}</Box>
       <Box>
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: -0.25 }}>{label}</Typography>
-        <Typography variant="body2" fontWeight={600}>{value}</Typography>
+        <Typography variant="caption" sx={{ display: 'block', mb: 0.25, fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          {label}
+        </Typography>
+        <Typography variant="body1" sx={{ fontWeight: 800, color: 'text.primary' }}>{value}</Typography>
       </Box>
+    </Stack>
+  )
+}
+
+function FeatureItem({ icon, text }) {
+  return (
+    <Stack direction="row" spacing={1.25} alignItems="center">
+      <Box sx={{ color: 'white', opacity: 0.9, display: 'flex' }}>{icon}</Box>
+      <Typography variant="body2" sx={{ fontWeight: 600 }}>{text}</Typography>
     </Stack>
   )
 }

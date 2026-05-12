@@ -11,9 +11,10 @@ import {
   Tooltip, 
   Chip, 
   useTheme, 
-  alpha 
+  alpha,
+  Avatar
 } from '@mui/material'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, Bot, User } from 'lucide-react'
 
 export default function ChatAssistant() {
   const theme = useTheme()
@@ -21,7 +22,7 @@ export default function ChatAssistant() {
   const [showChat, setShowChat] = useState(false)
   const [chatInput, setChatInput] = useState('')
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! I'm your MediBook assistant. How can I help you with your booking today?", isBot: true }
+    { id: 1, text: "Hello! I'm your MediBook AI assistant. How can I help you today?", isBot: true }
   ])
 
   useEffect(() => {
@@ -42,29 +43,37 @@ export default function ChatAssistant() {
       const lowerText = text.toLowerCase()
       
       if (lowerText.includes("date")) {
-        botResponse = "In Step 2, you can select any date from the weekly calendar. Click the arrows to see future weeks!"
+        botResponse = "You can select a date in Step 2. Just click on any day in the calendar to see available times!"
       } else if (lowerText.includes("cancel")) {
-        botResponse = "Yes, you can cancel your appointment anytime through the link in your confirmation email."
+        botResponse = "Cancellation is easy! You can find a cancel link in your confirmation email or contact our support."
       } else if (lowerText.includes("support")) {
-        botResponse = "You can reach our support team at support@medibook.com or call +1-800-MED-BOOK."
+        botResponse = "Our team is here 24/7. Email us at care@medibook.com or call our hotline."
       } else if (lowerText.includes("doctor")) {
-        botResponse = "We have experts in Cardiology, Dermatology, Pediatrics, and more. Use the filters to find the right specialist."
+        botResponse = "We have top-rated specialists across all fields. Use the filters to find one that fits your needs."
       }
 
       setMessages(prev => [...prev, { id: Date.now() + 1, text: botResponse, isBot: true }])
-    }, 600)
+    }, 800)
   }
 
   return (
-    <Box sx={{ position: 'fixed', bottom: 32, right: 32, zIndex: 1000 }}>
+    <Box sx={{ position: 'fixed', bottom: { xs: 20, sm: 32 }, right: { xs: 20, sm: 32 }, zIndex: 1000 }}>
       <Zoom in={true}>
-        <Tooltip title={showChat ? "Close Assistant" : "Help Assistant"} placement="left">
+        <Tooltip title={showChat ? "Close Chat" : "Talk to AI"} placement="left">
           <Fab 
             color="primary" 
             onClick={() => setShowChat(!showChat)}
-            sx={{ boxShadow: theme.shadows[10] }}
+            sx={{ 
+              width: 64, 
+              height: 64,
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+              boxShadow: '0 12px 24px -6px rgba(79, 70, 229, 0.4)',
+              '&:hover': {
+                transform: 'scale(1.05) rotate(5deg)',
+              }
+            }}
           >
-            {showChat ? <X /> : <MessageCircle />}
+            {showChat ? <X size={28} /> : <MessageCircle size={28} />}
           </Fab>
         </Tooltip>
       </Zoom>
@@ -75,83 +84,132 @@ export default function ChatAssistant() {
             position: 'absolute', 
             bottom: 80, 
             right: 0, 
-            width: { xs: 300, sm: 350 }, 
-            height: 450, 
-            borderRadius: 4, 
+            width: { xs: 'calc(100vw - 40px)', sm: 380 }, 
+            height: 520, 
+            borderRadius: 5, 
             display: 'flex', 
             flexDirection: 'column', 
             overflow: 'hidden',
-            boxShadow: theme.shadows[20],
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)',
             border: '1px solid',
-            borderColor: 'divider'
+            borderColor: 'grey.100',
+            background: '#ffffff'
           }}
         >
-          <Box sx={{ p: 2.5, bgcolor: 'primary.main', color: 'white' }}>
-            <Typography variant="subtitle1" fontWeight={700}>MediBook AI Assistant</Typography>
-            <Typography variant="caption" sx={{ opacity: 0.8 }}>Online • Available 24/7</Typography>
+          <Box 
+            sx={{ 
+              p: 3, 
+              background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`, 
+              color: 'white' 
+            }}
+          >
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 44, height: 44 }}>
+                <Bot size={24} />
+              </Avatar>
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 800, lineHeight: 1.2 }}>MediBook AI</Typography>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontWeight: 600 }}>Always here to help</Typography>
+              </Box>
+            </Stack>
           </Box>
           
-          <Box sx={{ flex: 1, p: 2, bgcolor: 'grey.50', overflowY: 'auto' }}>
+          <Box sx={{ flex: 1, p: 3, bgcolor: '#f8fafc', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
             {messages.map((msg) => (
-              <Box key={msg.id} sx={{ mb: 2, display: 'flex', justifyContent: msg.isBot ? 'flex-start' : 'flex-end' }}>
+              <Box 
+                key={msg.id} 
+                sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  alignItems: msg.isBot ? 'flex-start' : 'flex-end' 
+                }}
+              >
                 <Box 
                   sx={{ 
-                    p: 1.5, 
+                    p: 2, 
                     bgcolor: msg.isBot ? 'white' : 'primary.main', 
                     color: msg.isBot ? 'text.primary' : 'white',
-                    borderRadius: msg.isBot ? '12px 12px 12px 0' : '12px 12px 0 12px', 
-                    boxShadow: theme.shadows[1], 
+                    borderRadius: msg.isBot ? '20px 20px 20px 4px' : '20px 20px 4px 20px', 
+                    boxShadow: msg.isBot ? '0 4px 6px -1px rgba(0,0,0,0.05)' : '0 10px 15px -3px rgba(79, 70, 229, 0.2)', 
                     maxWidth: '85%' 
                   }}
                 >
-                  <Typography variant="body2">{msg.text}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>{msg.text}</Typography>
                 </Box>
+                <Typography variant="caption" sx={{ mt: 0.5, px: 1, color: 'text.disabled', fontWeight: 600, fontSize: '0.65rem' }}>
+                  {msg.isBot ? 'AI Assistant' : 'You'}
+                </Typography>
               </Box>
             ))}
             
-            <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>Quick actions:</Typography>
-              <Chip 
-                label="How to select a date?" 
-                size="small" 
-                onClick={() => handleSendMessage("How to select a date?")} 
-                sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-              />
-              <Chip 
-                label="Can I cancel later?" 
-                size="small" 
-                onClick={() => handleSendMessage("Can I cancel later?")} 
-                sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-              />
-              <Chip 
-                label="Contact Support" 
-                size="small" 
-                onClick={() => handleSendMessage("Contact Support")} 
-                sx={{ cursor: 'pointer', bgcolor: 'white' }} 
-              />
-            </Box>
+            {messages.length < 4 && (
+              <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1.25 }}>
+                <Typography variant="caption" sx={{ ml: 0.5, color: 'text.secondary', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Quick Questions
+                </Typography>
+                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                  <QuickChip label="How to book?" onClick={() => handleSendMessage("How to select a date?")} />
+                  <QuickChip label="Support" onClick={() => handleSendMessage("Contact Support")} />
+                  <QuickChip label="Cancellation" onClick={() => handleSendMessage("Can I cancel later?")} />
+                </Stack>
+              </Box>
+            )}
             <div ref={chatEndRef} />
           </Box>
 
-          <Box sx={{ p: 2, bgcolor: 'white', borderTop: '1px solid', borderColor: 'divider' }}>
-            <Stack direction="row" spacing={1}>
+          <Box sx={{ p: 2.5, bgcolor: 'white', borderTop: '1px solid', borderColor: 'grey.100' }}>
+            <Stack direction="row" spacing={1.5}>
               <TextField 
                 fullWidth 
                 size="small" 
-                placeholder="Type your message..." 
-                variant="outlined"
+                placeholder="Ask me anything..." 
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(chatInput)}
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 10 } }}
+                sx={{ 
+                  '& .MuiOutlinedInput-root': { 
+                    borderRadius: 3,
+                    bgcolor: 'grey.50',
+                    '&:hover': { bgcolor: 'grey.100' }
+                  } 
+                }}
               />
-              <IconButton color="primary" onClick={() => handleSendMessage(chatInput)}>
-                <Send size={20} />
+              <IconButton 
+                onClick={() => handleSendMessage(chatInput)}
+                sx={{ 
+                  bgcolor: 'primary.main', 
+                  color: 'white',
+                  borderRadius: 3,
+                  width: 40,
+                  height: 40,
+                  '&:hover': { bgcolor: 'primary.dark', transform: 'scale(1.05)' }
+                }}
+              >
+                <Send size={18} />
               </IconButton>
             </Stack>
           </Box>
         </Paper>
       </Zoom>
     </Box>
+  )
+}
+
+function QuickChip({ label, onClick }) {
+  return (
+    <Chip 
+      label={label} 
+      size="small" 
+      onClick={onClick} 
+      sx={{ 
+        cursor: 'pointer', 
+        bgcolor: 'white', 
+        border: '1px solid',
+        borderColor: 'grey.200',
+        fontWeight: 600,
+        fontSize: '0.75rem',
+        '&:hover': { bgcolor: 'primary.main', color: 'white', borderColor: 'primary.main' }
+      }} 
+    />
   )
 }
