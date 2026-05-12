@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { 
   Container, 
@@ -37,6 +37,7 @@ import ConfirmationPopup from '../components/ConfirmationPopup'
 export default function BookingPage() {
   const theme = useTheme()
   const navigate = useNavigate()
+  const chatEndRef = useRef(null)
   
   const { 
     selectedDoctor, 
@@ -63,6 +64,10 @@ export default function BookingPage() {
 
   const [errors, setErrors] = useState({})
   const [showChat, setShowChat] = useState(false)
+  const [chatInput, setChatInput] = useState('')
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Hello! I'm your MediBook assistant. How can I help you with your booking today?", isBot: true }
+  ])
 
   const handleNext = () => setStep(currentStep + 1)
   const handleBack = () => setStep(currentStep - 1)
@@ -70,6 +75,12 @@ export default function BookingPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [currentStep])
+
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages, showChat])
 
   const validateStep2 = () => {
     const newErrors = {}
@@ -99,6 +110,28 @@ export default function BookingPage() {
     }).toString()
     
     navigate(`/confirmation?${query}`)
+  }
+
+  const handleSendMessage = (text) => {
+    if (!text.trim()) return
+
+    const userMsg = { id: Date.now(), text, isBot: false }
+    setMessages(prev => [...prev, userMsg])
+    setChatInput('')
+
+    setTimeout(() => {
+      let botResponse = "I'm processing your request. Please hold on a moment."
+      
+      if (text.includes("date")) {
+        botResponse = "In Step 2, you can select any date from the weekly calendar. Click the arrows to see future weeks!"
+      } else if (text.includes("cancel")) {
+        botResponse = "Yes, you can cancel your appointment anytime through the link in your confirmation email."
+      } else if (text.includes("Support")) {
+        botResponse = "You can reach our support team at support@medibook.com or call +1-800-MED-BOOK."
+      }
+
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: botResponse, isBot: true }])
+    }, 600)
   }
 
   return (
@@ -419,20 +452,45 @@ export default function BookingPage() {
             </Box>
             
             <Box sx={{ flex: 1, p: 2, bgcolor: 'grey.50', overflowY: 'auto' }}>
-              <Box sx={{ mb: 2, display: 'flex' }}>
-                <Box sx={{ p: 1.5, bgcolor: 'white', borderRadius: '12px 12px 12px 0', boxShadow: theme.shadows[1], maxWidth: '85%' }}>
-                  <Typography variant="body2">
-                    Hello! I'm your MediBook assistant. How can I help you with your booking today?
-                  </Typography>
+              {messages.map((msg) => (
+                <Box key={msg.id} sx={{ mb: 2, display: 'flex', justifyContent: msg.isBot ? 'flex-start' : 'flex-end' }}>
+                  <Box 
+                    sx={{ 
+                      p: 1.5, 
+                      bgcolor: msg.isBot ? 'white' : 'primary.main', 
+                      color: msg.isBot ? 'text.primary' : 'white',
+                      borderRadius: msg.isBot ? '12px 12px 12px 0' : '12px 12px 0 12px', 
+                      boxShadow: theme.shadows[1], 
+                      maxWidth: '85%' 
+                    }}
+                  >
+                    <Typography variant="body2">{msg.text}</Typography>
+                  </Box>
                 </Box>
-              </Box>
+              ))}
               
-              <Box sx={{ mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
+              <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1 }}>
                 <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>Quick actions:</Typography>
-                <Chip label="How to select a date?" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
-                <Chip label="Can I cancel later?" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
-                <Chip label="Contact Support" size="small" onClick={() => {}} sx={{ cursor: 'pointer' }} />
+                <Chip 
+                  label="How to select a date?" 
+                  size="small" 
+                  onClick={() => handleSendMessage("How to select a date?")} 
+                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
+                />
+                <Chip 
+                  label="Can I cancel later?" 
+                  size="small" 
+                  onClick={() => handleSendMessage("Can I cancel later?")} 
+                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
+                />
+                <Chip 
+                  label="Contact Support" 
+                  size="small" 
+                  onClick={() => handleSendMessage("Contact Support")} 
+                  sx={{ cursor: 'pointer', bgcolor: 'white' }} 
+                />
               </Box>
+              <div ref={chatEndRef} />
             </Box>
 
             <Box sx={{ p: 2, bgcolor: 'white', borderTop: '1px solid', borderColor: 'divider' }}>
@@ -442,9 +500,12 @@ export default function BookingPage() {
                   size="small" 
                   placeholder="Type your message..." 
                   variant="outlined"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(chatInput)}
                   sx={{ '& .MuiOutlinedInput-root': { borderRadius: 10 } }}
                 />
-                <IconButton color="primary">
+                <IconButton color="primary" onClick={() => handleSendMessage(chatInput)}>
                   <Send size={20} />
                 </IconButton>
               </Stack>
