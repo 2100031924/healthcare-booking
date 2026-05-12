@@ -1,137 +1,179 @@
-import { useState } from 'react'
-import { Paper, Typography, IconButton, Box } from '@mui/material'
-import { getDatesForWeek } from '../data/doctors'
-
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+import { useState, useMemo } from 'react'
+import { 
+  Paper, 
+  Typography, 
+  IconButton, 
+  Box, 
+  Stack, 
+  Button,
+  alpha,
+  useTheme 
+} from '@mui/material'
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react'
+import { 
+  getDatesForWeek, 
+  isToday, 
+  isPastDate, 
+  isSameDay, 
+  DAY_ABBREVIATIONS, 
+  getMonthYearLabel 
+} from '../utils/helpers'
+import { MAX_WEEKS_AHEAD } from '../constants'
 
 export default function DatePicker({ selectedDate, onSelectDate }) {
+  const theme = useTheme()
   const [offset, setOffset] = useState(0)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
 
-  const weekStart = new Date(today)
-  weekStart.setDate(today.getDate() + offset * 7)
-  const dates = getDatesForWeek(weekStart)
-  const monthLabel = weekStart.toLocaleString('default', { month: 'long', year: 'numeric' })
+  const today = useMemo(() => {
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
+    return d
+  }, [])
 
-  function goBack() {
-    if (offset > 0) setOffset(offset - 1)
-  }
+  const weekDates = useMemo(() => {
+    const start = new Date(today)
+    start.setDate(today.getDate() + offset * 7)
+    return getDatesForWeek(start)
+  }, [offset, today])
 
-  function goForward() {
-    if (offset < 4) setOffset(offset + 1)
-  }
+  const monthLabel = useMemo(() => getMonthYearLabel(weekDates[0]), [weekDates])
 
-  function handleDateClick(date) {
-    if (date >= today) {
-      onSelectDate(date)
-    }
-  }
+  const handlePrev = () => setOffset((prev) => Math.max(0, prev - 1))
+  const handleNext = () => setOffset((prev) => Math.min(MAX_WEEKS_AHEAD, prev + 1))
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Box>
-          <Typography variant="subtitle2" fontWeight="600" sx={{ fontSize: 13 }}>Select Date</Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }}>{monthLabel}</Typography>
-        </Box>
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
-          <IconButton 
-            size="small" 
-            onClick={goBack} 
-            disabled={offset === 0} 
-            sx={{ 
-              border: '1px solid', 
-              borderColor: 'grey.300', 
-              borderRadius: 1, 
-              width: 30, 
-              height: 30,
-              transition: 'all 0.15s ease',
-              '&:hover': { bgcolor: 'primary.light', color: 'white', borderColor: 'primary.light' }
+    <Paper sx={{ p: 3, height: '100%' }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Box
+            sx={{
+              p: 1,
+              borderRadius: 2,
+              bgcolor: alpha(theme.palette.primary.main, 0.1),
+              color: 'primary.main',
+              display: 'flex',
             }}
           >
-            &#8249;
-          </IconButton>
-          <IconButton 
-            size="small" 
-            onClick={goForward} 
-            disabled={offset >= 4} 
-            sx={{ 
-              border: '1px solid', 
-              borderColor: 'grey.300', 
-              borderRadius: 1, 
-              width: 30, 
-              height: 30,
-              transition: 'all 0.15s ease',
-              '&:hover': { bgcolor: 'primary.light', color: 'white', borderColor: 'primary.light' }
-            }}
-          >
-            &#8250;
-          </IconButton>
-        </Box>
-      </Box>
-
-      <Box sx={{ display: 'flex' }}>
-        {DAYS.map(d => (
-          <Box key={d} sx={{ flex: 1 }}>
-            <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', color: 'text.secondary', fontSize: 11, fontWeight: 600, mb: 1 }}>
-              {d}
+            <CalendarIcon size={20} />
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>
+              Select Appointment Date
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {monthLabel}
             </Typography>
           </Box>
-        ))}
-      </Box>
+        </Stack>
 
-      <Box sx={{ display: 'flex' }}>
-        {dates.map((date, i) => {
-          const isPast = date < today
-          const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString()
-          const isToday = date.toDateString() === today.toDateString()
+        <Stack direction="row" spacing={1}>
+          <IconButton
+            size="small"
+            onClick={handlePrev}
+            disabled={offset === 0}
+            sx={{ 
+              border: '1px solid', 
+              borderColor: 'divider',
+              '&:hover': { bgcolor: 'grey.100' }
+            }}
+          >
+            <ChevronLeft size={18} />
+          </IconButton>
+          <IconButton
+            size="small"
+            onClick={handleNext}
+            disabled={offset >= MAX_WEEKS_AHEAD}
+            sx={{ 
+              border: '1px solid', 
+              borderColor: 'divider',
+              '&:hover': { bgcolor: 'grey.100' }
+            }}
+          >
+            <ChevronRight size={18} />
+          </IconButton>
+        </Stack>
+      </Stack>
+
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+        {DAY_ABBREVIATIONS.map((day) => (
+          <Typography
+            key={day}
+            variant="caption"
+            align="center"
+            fontWeight={700}
+            color="text.secondary"
+            sx={{ mb: 1, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+          >
+            {day}
+          </Typography>
+        ))}
+
+        {weekDates.map((date, idx) => {
+          const past = isPastDate(date)
+          const current = isToday(date)
+          const selected = isSameDay(date, selectedDate)
 
           return (
-            <Box
-              key={i}
-              onClick={() => handleDateClick(date)}
+            <Button
+              key={idx}
+              disabled={past}
+              onClick={() => onSelectDate(date)}
               sx={{
-                flex: 1,
-                py: 1,
-                textAlign: 'center',
-                cursor: isPast ? 'default' : 'pointer',
-                opacity: isPast ? 0.3 : 1,
-                bgcolor: isSelected ? 'primary.main' : 'transparent',
-                color: isSelected ? 'white' : isToday ? 'primary.main' : 'text.primary',
-                borderRadius: 1.5,
-                transition: 'all 0.15s ease',
-                '&:hover': isPast ? {} : { bgcolor: isSelected ? 'primary.main' : 'grey.100' }
+                minWidth: 0,
+                aspectRatio: '1/1',
+                borderRadius: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                p: 0,
+                bgcolor: selected ? 'primary.main' : 'transparent',
+                color: selected ? 'white' : past ? 'text.disabled' : 'text.primary',
+                border: '1px solid',
+                borderColor: selected ? 'primary.main' : current ? alpha(theme.palette.primary.main, 0.3) : 'transparent',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  bgcolor: selected ? 'primary.main' : alpha(theme.palette.primary.main, 0.05),
+                  borderColor: selected ? 'primary.main' : 'primary.main',
+                },
+                '&.Mui-disabled': {
+                  color: 'text.disabled',
+                }
               }}
             >
-              <Typography sx={{ fontSize: 14, fontWeight: isSelected || isToday ? 700 : 400 }}>
+              <Typography variant="body2" fontWeight={selected || current ? 700 : 500}>
                 {date.getDate()}
               </Typography>
-              {isToday && (
-                <Typography sx={{ fontSize: 7, fontWeight: 700, color: isSelected ? 'white' : 'primary.main' }}>
-                  TODAY
-                </Typography>
+              {current && !selected && (
+                <Box
+                  sx={{
+                    width: 4,
+                    height: 4,
+                    borderRadius: '50%',
+                    bgcolor: 'primary.main',
+                    mt: 0.25,
+                  }}
+                />
               )}
-            </Box>
+            </Button>
           )
         })}
       </Box>
 
       {selectedDate && (
-        <Box 
-          sx={{ 
-            mt: 2, 
-            p: 1.5, 
-            bgcolor: 'grey.100', 
-            borderRadius: 1,
-            animation: 'fadeIn 0.2s ease'
+        <Box
+          sx={{
+            mt: 3,
+            p: 2,
+            borderRadius: 2,
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
+            border: '1px dashed',
+            borderColor: alpha(theme.palette.primary.main, 0.2),
           }}
         >
-          <Typography variant="caption" color="text.secondary" sx={{ fontSize: 10, display: 'block' }}>
-            Selected
+          <Typography variant="caption" color="primary.main" fontWeight={700} sx={{ display: 'block', mb: 0.5, textTransform: 'uppercase' }}>
+            Selected Date
           </Typography>
-          <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
-            {selectedDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+          <Typography variant="body2" fontWeight={600}>
+            {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
           </Typography>
         </Box>
       )}

@@ -1,12 +1,32 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Avatar, Box } from '@mui/material'
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Typography, 
+  Button, 
+  Avatar, 
+  Box,
+  Stack,
+  Divider,
+  IconButton,
+  alpha,
+  useTheme
+} from '@mui/material'
+import { X, Calendar, Clock, User, ShieldCheck, Mail, Phone } from 'lucide-react'
+import { formatTime, formatCompactDate } from '../utils/helpers'
 
-function formatTime(time) {
-  const [h, m] = time.split(':')
-  const hour = parseInt(h)
-  return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`
-}
+export default function ConfirmationPopup({ 
+  open, 
+  onClose, 
+  doctor, 
+  date, 
+  slot, 
+  patientDetails, 
+  onConfirm 
+}) {
+  const theme = useTheme()
 
-export default function ConfirmationPopup({ open, onClose, doctor, date, slot, patientName, onConfirm }) {
   return (
     <Dialog 
       open={open} 
@@ -15,76 +35,156 @@ export default function ConfirmationPopup({ open, onClose, doctor, date, slot, p
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 2,
-          animation: 'scaleIn 0.2s ease'
+          borderRadius: 4,
+          overflow: 'hidden'
         }
       }}
     >
-      <DialogTitle sx={{ bgcolor: 'primary.main', color: 'white', py: 2 }}>
-        <Typography variant="h6" fontWeight="600" sx={{ fontSize: 16 }}>Confirm Booking</Typography>
-        <Typography variant="body2" sx={{ fontSize: 12, opacity: 0.85 }}>Review your appointment details</Typography>
+      <DialogTitle sx={{ p: 0 }}>
+        <Box sx={{ bgcolor: 'primary.main', color: 'white', px: 3, py: 3, position: 'relative' }}>
+          <Typography variant="h6" fontWeight={700}>
+            Confirm Appointment
+          </Typography>
+          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+            Please review your booking details
+          </Typography>
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              color: 'white',
+              '&:hover': { bgcolor: alpha('#fff', 0.1) }
+            }}
+          >
+            <X size={20} />
+          </IconButton>
+        </Box>
       </DialogTitle>
 
-      <DialogContent sx={{ py: 2 }}>
-        <Box sx={{ p: 2, bgcolor: 'grey.100', borderRadius: 1.5, mb: 2 }}>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <Avatar
-              src={doctor?.image}
-              alt={doctor?.name}
-              sx={{ width: 50, height: 50 }}
-              onError={(e) => { e.target.style.opacity = 0 }}
+      <DialogContent sx={{ px: 3, py: 4 }}>
+        <Stack spacing={3}>
+          <Box 
+            sx={{ 
+              p: 2, 
+              borderRadius: 3, 
+              bgcolor: alpha(theme.palette.primary.main, 0.03),
+              border: '1px solid',
+              borderColor: alpha(theme.palette.primary.main, 0.1),
+            }}
+          >
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Avatar
+                src={doctor?.image}
+                alt={doctor?.name}
+                sx={{ width: 56, height: 56, borderRadius: 2 }}
+              />
+              <Box>
+                <Typography variant="subtitle1" fontWeight={700} sx={{ lineHeight: 1.2 }}>
+                  {doctor?.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+                  {doctor?.title}
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
+
+          <Stack spacing={2}>
+            <DetailItem 
+              icon={<Calendar size={18} color={theme.palette.primary.main} />} 
+              label="Date" 
+              value={date ? formatCompactDate(date) : ''} 
             />
-            <div style={{ flex: 1 }}>
-              <Typography fontWeight="600" sx={{ fontSize: 14 }}>{doctor?.name}</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: 12, textTransform: 'capitalize' }}>
-                {doctor?.specialization}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" sx={{ fontSize: 11 }}>
-                {doctor?.experience} years exp • &#9733; {doctor?.rating}
-              </Typography>
-            </div>
-          </div>
-        </Box>
+            <DetailItem 
+              icon={<Clock size={18} color={theme.palette.primary.main} />} 
+              label="Time Slot" 
+              value={slot ? formatTime(slot.time) : ''} 
+            />
+            <Divider sx={{ borderStyle: 'dashed' }} />
+            <DetailItem 
+              icon={<User size={18} color={theme.palette.primary.main} />} 
+              label="Patient Name" 
+              value={patientDetails.name} 
+            />
+            <DetailItem 
+              icon={<Mail size={18} color={theme.palette.primary.main} />} 
+              label="Email" 
+              value={patientDetails.email} 
+            />
+            <DetailItem 
+              icon={<Phone size={18} color={theme.palette.primary.main} />} 
+              label="Phone" 
+              value={patientDetails.phone} 
+            />
+          </Stack>
 
-        <Box sx={{ mb: 1 }}>
-          <DetailRow label="Date" value={date ? date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : ''} />
-          <DetailRow label="Time" value={slot ? formatTime(slot.time) : ''} />
-          <DetailRow label="Patient" value={patientName} />
-        </Box>
-
-        <Typography variant="body2" sx={{ mt: 2, p: 1.5, bgcolor: 'warning.light', color: 'warning.dark', borderRadius: 1, fontSize: 12 }}>
-          A confirmation email will be sent to your email address
-        </Typography>
+          <Box 
+            sx={{ 
+              p: 2, 
+              borderRadius: 2, 
+              bgcolor: alpha(theme.palette.info.main, 0.05),
+              display: 'flex',
+              gap: 1.5
+            }}
+          >
+            <ShieldCheck size={20} color={theme.palette.info.main} />
+            <Typography variant="caption" color="info.main" sx={{ lineHeight: 1.4 }}>
+              Your appointment is secured. You will receive a confirmation email and SMS shortly after booking.
+            </Typography>
+          </Box>
+        </Stack>
       </DialogContent>
 
-      <DialogActions sx={{ px: 2, py: 2, gap: 1 }}>
+      <DialogActions sx={{ px: 3, pb: 3, pt: 0 }}>
         <Button 
-          onClick={onClose} 
           variant="outlined" 
           fullWidth 
-          sx={{ borderRadius: 1, transition: 'all 0.15s ease' }}
+          onClick={onClose}
+          sx={{ borderRadius: 2, py: 1.5 }}
         >
-          Cancel
+          Go Back
         </Button>
         <Button 
-          onClick={onConfirm} 
           variant="contained" 
           fullWidth 
-          disableElevation 
-          sx={{ borderRadius: 1, transition: 'all 0.15s ease' }}
+          onClick={onConfirm}
+          sx={{ borderRadius: 2, py: 1.5 }}
         >
-          Confirm
+          Confirm Booking
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-function DetailRow({ label, value }) {
+function DetailItem({ icon, label, value }) {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', py: 1.25, borderBottom: '1px solid', borderColor: 'divider' }}>
-      <Typography variant="body2" color="text.secondary" sx={{ fontSize: 13 }}>{label}</Typography>
-      <Typography variant="body2" fontWeight="600" sx={{ fontSize: 13 }}>{value}</Typography>
-    </Box>
+    <Stack direction="row" spacing={2} alignItems="center">
+      <Box 
+        sx={{ 
+          width: 36, 
+          height: 36, 
+          borderRadius: 1.5, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          bgcolor: 'grey.50',
+          border: '1px solid',
+          borderColor: 'grey.100'
+        }}
+      >
+        {icon}
+      </Box>
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: -0.5 }}>
+          {label}
+        </Typography>
+        <Typography variant="body2" fontWeight={600}>
+          {value || 'Not provided'}
+        </Typography>
+      </Box>
+    </Stack>
   )
 }
