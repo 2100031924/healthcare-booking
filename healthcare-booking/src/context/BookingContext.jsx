@@ -36,7 +36,6 @@ function bookingReducer(state, action) {
       return {
         ...state,
         selectedSlot: action.payload,
-        currentStep: state.selectedDate ? 2 : state.currentStep,
       }
     case 'SET_PATIENT_DETAILS':
       return {

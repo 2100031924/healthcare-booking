@@ -85,7 +85,7 @@ export function isValidEmail(email) {
 
 export function isValidPhone(phone) {
   const digitsOnly = phone.replace(/\D/g, '')
-  return digitsOnly.length >= 10
+  return digitsOnly.length === 10
 }
 
 export function formatPhoneNumber(phone) {

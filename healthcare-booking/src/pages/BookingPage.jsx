@@ -75,7 +75,7 @@ export default function BookingPage() {
     if (!patientDetails.email.trim()) newErrors.email = 'Email address is required'
     else if (!isValidEmail(patientDetails.email)) newErrors.email = 'Please enter a valid email'
     if (!patientDetails.phone.trim()) newErrors.phone = 'Phone number is required'
-    else if (!isValidPhone(patientDetails.phone)) newErrors.phone = 'Please enter at least 10 digits'
+    else if (!isValidPhone(patientDetails.phone)) newErrors.phone = 'Please enter exactly 10 digits'
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -384,52 +384,50 @@ export default function BookingPage() {
                       Patient Information
                     </Typography>
                     
-                    <Grid container spacing={4}>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          label="Your Full Name"
-                          value={patientDetails.name}
-                          onChange={(e) => setPatientDetails({ name: e.target.value })}
-                          error={!!errors.name}
-                          helperText={errors.name}
-                          placeholder="John Doe"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          label="Email Address"
-                          value={patientDetails.email}
-                          onChange={(e) => setPatientDetails({ email: e.target.value })}
-                          error={!!errors.email}
-                          helperText={errors.email}
-                          placeholder="john@example.com"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          label="Phone Number"
-                          value={patientDetails.phone}
-                          onChange={(e) => setPatientDetails({ phone: e.target.value })}
-                          error={!!errors.phone}
-                          helperText={errors.phone}
-                          placeholder="+1 (555) 000-0000"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          multiline
-                          rows={4}
-                          label="Reason for Visit (Optional)"
-                          value={patientDetails.reason}
-                          onChange={(e) => setPatientDetails({ reason: e.target.value })}
-                          placeholder="Briefly describe why you are booking this appointment..."
-                        />
-                      </Grid>
-                    </Grid>
+                    <Stack spacing={4}>
+                      <TextField
+                        fullWidth
+                        label="Your Full Name"
+                        value={patientDetails.name}
+                        onChange={(e) => setPatientDetails({ name: e.target.value })}
+                        error={!!errors.name}
+                        helperText={errors.name}
+                        placeholder="John Doe"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Email Address"
+                        value={patientDetails.email}
+                        onChange={(e) => setPatientDetails({ email: e.target.value })}
+                        error={!!errors.email}
+                        helperText={errors.email}
+                        placeholder="john@example.com"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Phone Number"
+                        value={patientDetails.phone}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '')
+                          if (val.length <= 10) {
+                            setPatientDetails({ phone: val })
+                          }
+                        }}
+                        error={!!errors.phone}
+                        helperText={errors.phone || "Enter 10-digit number"}
+                        placeholder="5550000000"
+                        inputProps={{ inputMode: 'numeric', maxLength: 10 }}
+                      />
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        label="Reason for Visit (Optional)"
+                        value={patientDetails.reason}
+                        onChange={(e) => setPatientDetails({ reason: e.target.value })}
+                        placeholder="Briefly describe why you are booking this appointment..."
+                      />
+                    </Stack>
 
                     <Box sx={{ mt: 6 }}>
                       <Button

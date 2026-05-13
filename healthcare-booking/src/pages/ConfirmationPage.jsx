@@ -11,7 +11,8 @@ import {
   alpha,
   useTheme,
   IconButton,
-  Avatar
+  Avatar,
+  Grid
 } from '@mui/material'
 import { CheckCircle, Calendar, Clock, User, ArrowLeft, Download, Share2, MapPin, Printer, ExternalLink } from 'lucide-react'
 import { formatTime, formatDisplayDate } from '../utils/helpers'
@@ -27,9 +28,6 @@ export default function ConfirmationPage() {
   const appointmentDate = params.get('date') ? new Date(params.get('date')) : new Date()
   const appointmentTime = params.get('time') || '10:00 AM'
   const patientName = params.get('name') || 'Patient'
-
-  useEffect(() => {
-  }, [resetBooking])
 
   const handlePrint = () => window.print()
 

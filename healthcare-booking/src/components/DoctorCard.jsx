@@ -68,7 +68,7 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
         </Box>
       )}
 
-      <CardContent sx={{ p: 3, flexGrow: 1 }}>
+      <CardContent sx={{ p: 2.5, pb: 2, flexGrow: 1 }}>
         <Stack direction="row" spacing={2.5} alignItems="center">
           <Box sx={{ position: 'relative' }}>
             <Avatar
@@ -119,15 +119,15 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
           </Box>
         </Stack>
 
-        <Box sx={{ mt: 3 }}>
-          <Stack spacing={1.5}>
+        <Box sx={{ mt: 2 }}>
+          <Stack spacing={1.25}>
             <InfoRow icon={<Clock size={16} />} label={`${doctor.experience} Years Exp`} />
             <InfoRow icon={<GraduationCap size={16} />} label={doctor.education} />
             <InfoRow icon={<Languages size={16} />} label={doctor.languages.join(', ')} />
           </Stack>
         </Box>
 
-        <Box sx={{ mt: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           <Chip
             label={doctor.specialization}
             size="small"
