@@ -68,8 +68,8 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
         </Box>
       )}
 
-      <CardContent sx={{ p: 2.5, pb: 2, flexGrow: 1 }}>
-        <Stack direction="row" spacing={2.5} alignItems="center">
+      <CardContent sx={{ p: 3, pb: 3, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <Stack direction="row" spacing={2.5} alignItems="flex-start">
           <Box sx={{ position: 'relative' }}>
             <Avatar
               src={doctor.image}
@@ -98,10 +98,10 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h6" sx={{ fontSize: '1rem', mb: 0.5, lineHeight: 1.2 }}>
+            <Typography variant="h6" sx={{ fontSize: '1rem', mb: 0.25, lineHeight: 1.2, fontWeight: 700 }}>
               {doctor.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary" fontWeight={500} sx={{ mb: 1.5 }}>
+            <Typography variant="body2" color="primary.main" fontWeight={700} sx={{ mb: 1, fontSize: '0.8rem' }}>
               {doctor.title}
             </Typography>
             <Stack direction="row" spacing={1} alignItems="center">
@@ -119,15 +119,15 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
           </Box>
         </Stack>
 
-        <Box sx={{ mt: 2 }}>
-          <Stack spacing={1.25}>
+        <Box sx={{ mt: 3, mb: 'auto' }}>
+          <Stack spacing={1.5}>
             <InfoRow icon={<Clock size={16} />} label={`${doctor.experience} Years Exp`} />
             <InfoRow icon={<GraduationCap size={16} />} label={doctor.education} />
             <InfoRow icon={<Languages size={16} />} label={doctor.languages.join(', ')} />
           </Stack>
         </Box>
 
-        <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        <Box sx={{ mt: 2.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           <Chip
             label={doctor.specialization}
             size="small"
@@ -145,9 +145,9 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
 
       <Divider sx={{ opacity: 0.6 }} />
 
-      <Box sx={{ p: 2.5, bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.02) : 'transparent' }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Box>
+      <Box sx={{ p: 3, bgcolor: isSelected ? alpha(theme.palette.primary.main, 0.02) : 'transparent' }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+          <Box sx={{ minWidth: 'fit-content' }}>
             <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Availability
             </Typography>
@@ -165,6 +165,8 @@ export default function DoctorCard({ doctor, isSelected, onSelect }) {
               px: isSelected ? 3 : 2,
               fontWeight: 700,
               fontSize: '0.75rem',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
             }}
           >
             {isSelected ? 'Selected' : 'Book Now'}

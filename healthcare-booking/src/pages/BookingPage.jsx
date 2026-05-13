@@ -18,7 +18,9 @@ import {
   useTheme, 
   alpha, 
   IconButton,
-  Divider
+  Divider,
+  Snackbar,
+  Alert
 } from '@mui/material'
 import { Search, Filter, Calendar, User, ArrowLeft, ArrowRight, CheckCircle2, Heart, Award, Shield } from 'lucide-react'
 
@@ -61,6 +63,8 @@ export default function BookingPage() {
   } = useDoctors()
 
   const [errors, setErrors] = useState({})
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
 
   const handleNext = () => setStep(currentStep + 1)
   const handleBack = () => setStep(currentStep - 1)
@@ -71,12 +75,26 @@ export default function BookingPage() {
 
   const validateStep2 = () => {
     const newErrors = {}
-    if (!patientDetails.name.trim()) newErrors.name = 'Full name is required'
-    if (!patientDetails.email.trim()) newErrors.email = 'Email address is required'
-    else if (!isValidEmail(patientDetails.email)) newErrors.email = 'Please enter a valid email'
-    if (!patientDetails.phone.trim()) newErrors.phone = 'Phone number is required'
-    else if (!isValidPhone(patientDetails.phone)) newErrors.phone = 'Please enter exactly 10 digits'
-    
+    const name = patientDetails.name?.trim() || ''
+    const email = patientDetails.email?.trim() || ''
+    const phone = patientDetails.phone?.trim() || ''
+    const reason = patientDetails.reason?.trim() || ''
+
+    if (!name) newErrors.name = 'Full name is required'
+    else if (name.length < 2) newErrors.name = 'Name must be at least 2 characters long'
+    else if (name.length > 50) newErrors.name = 'Name cannot exceed 50 characters'
+    else if (!/^[a-zA-Z\s\-']+$/.test(name)) newErrors.name = 'Name contains invalid characters'
+
+    if (!email) newErrors.email = 'Email address is required'
+    else if (!isValidEmail(email)) newErrors.email = 'Please enter a valid email address'
+    else if (email.length > 100) newErrors.email = 'Email cannot exceed 100 characters'
+
+    if (!phone) newErrors.phone = 'Phone number is required'
+    else if (!isValidPhone(phone)) newErrors.phone = 'Please enter exactly 10 digits'
+
+    if (reason && reason.length > 500) newErrors.reason = 'Reason cannot exceed 500 characters'
+    else if (reason && /[<>]/g.test(reason)) newErrors.reason = 'Invalid characters in reason (< or >)'
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -84,19 +102,35 @@ export default function BookingPage() {
   const handleReviewBooking = () => {
     if (validateStep2()) {
       toggleConfirmation(true)
+    } else {
+      setSnackbarMessage('Please fix the errors in the form before proceeding.')
+      setSnackbarOpen(true)
     }
   }
 
   const handleFinalConfirm = () => {
-    toggleConfirmation(false)
-    const query = new URLSearchParams({
-      doc: selectedDoctor.name,
-      date: selectedDate.toISOString(),
-      time: selectedSlot.time,
-      name: patientDetails.name
-    }).toString()
-    
-    navigate(`/confirmation?${query}`)
+    try {
+      toggleConfirmation(false)
+      
+      if (!selectedDoctor || !selectedDate || !selectedSlot) {
+        setSnackbarMessage('Missing appointment details. Please try again.')
+        setSnackbarOpen(true)
+        return
+      }
+
+      const query = new URLSearchParams({
+        doc: selectedDoctor.name || 'Specialist',
+        date: selectedDate.toISOString(),
+        time: selectedSlot.time || '',
+        name: patientDetails.name || 'Patient'
+      }).toString()
+      
+      navigate(`/confirmation?${query}`)
+    } catch (error) {
+      console.error('Booking error:', error)
+      setSnackbarMessage('An error occurred while processing your booking.')
+      setSnackbarOpen(true)
+    }
   }
 
   return (
@@ -393,6 +427,7 @@ export default function BookingPage() {
                         error={!!errors.name}
                         helperText={errors.name}
                         placeholder="John Doe"
+                        inputProps={{ maxLength: 50 }}
                       />
                       <TextField
                         fullWidth
@@ -402,6 +437,7 @@ export default function BookingPage() {
                         error={!!errors.email}
                         helperText={errors.email}
                         placeholder="john@example.com"
+                        inputProps={{ maxLength: 100 }}
                       />
                       <TextField
                         fullWidth
@@ -425,7 +461,10 @@ export default function BookingPage() {
                         label="Reason for Visit (Optional)"
                         value={patientDetails.reason}
                         onChange={(e) => setPatientDetails({ reason: e.target.value })}
+                        error={!!errors.reason}
+                        helperText={errors.reason || `${patientDetails.reason?.length || 0}/500 characters`}
                         placeholder="Briefly describe why you are booking this appointment..."
+                        inputProps={{ maxLength: 500 }}
                       />
                     </Stack>
 
@@ -535,6 +574,17 @@ export default function BookingPage() {
         patientDetails={patientDetails}
         onConfirm={handleFinalConfirm}
       />
+
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={6000} 
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="error" sx={{ width: '100%', borderRadius: 3 }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   )
 }

@@ -41,7 +41,7 @@ describe('Helpers Utility Functions', () => {
 
     it('validates phone number with 10 or more digits', () => {
       expect(isValidPhone('1234567890')).toBe(true);
-      expect(isValidPhone('+1 (555) 123-4567')).toBe(true);
+      expect(isValidPhone('+91 6302272467')).toBe(true);
     });
 
     it('invalidates phone number with less than 10 digits', () => {

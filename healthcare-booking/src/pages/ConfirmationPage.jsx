@@ -14,7 +14,7 @@ import {
   Avatar,
   Grid
 } from '@mui/material'
-import { CheckCircle, Calendar, Clock, User, ArrowLeft, Download, Share2, MapPin, Printer, ExternalLink } from 'lucide-react'
+import { CheckCircle, Calendar, Clock, User, ArrowLeft, Download, Share2, MapPin, Printer, ExternalLink, X } from 'lucide-react'
 import { formatTime, formatDisplayDate } from '../utils/helpers'
 import { useBooking } from '../context/BookingContext'
 
@@ -25,9 +25,12 @@ export default function ConfirmationPage() {
   
   const params = new URLSearchParams(location.search)
   const doctorName = params.get('doc') || 'Specialist'
-  const appointmentDate = params.get('date') ? new Date(params.get('date')) : new Date()
-  const appointmentTime = params.get('time') || '10:00 AM'
+  const dateParam = params.get('date')
+  const timeParam = params.get('time') || '10:00 AM'
   const patientName = params.get('name') || 'Patient'
+
+  const appointmentDate = dateParam ? new Date(dateParam) : new Date()
+  const appointmentTime = timeParam
 
   const handlePrint = () => window.print()
 
