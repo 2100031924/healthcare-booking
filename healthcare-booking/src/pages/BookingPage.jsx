@@ -135,6 +135,7 @@ export default function BookingPage() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 10 }}>
+      {/* Blue Header Section */}
       <Box 
         sx={{ 
           bgcolor: 'primary.main', 
@@ -197,6 +198,7 @@ export default function BookingPage() {
         </Container>
       </Box>
 
+      {/* Main Content Section */}
       <Container maxWidth="lg" sx={{ mt: { xs: -8, md: -10 } }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
@@ -529,42 +531,12 @@ export default function BookingPage() {
                   </Paper>
                 </Box>
               )}
-
-              <Paper 
-                elevation={0}
-                sx={{ 
-                  p: 4, 
-                  borderRadius: 4, 
-                  bgcolor: 'grey.900', 
-                  color: 'white',
-                  backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 90%)'
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: 800, mb: 1.5 }}>Need Immediate Help?</Typography>
-                <Typography variant="body2" sx={{ opacity: 0.7, mb: 3, lineHeight: 1.6 }}>
-                  Our medical coordinators are available 24/7 to assist with your booking or medical inquiries.
-                </Typography>
-                <Button 
-                  variant="contained" 
-                  color="inherit" 
-                  fullWidth 
-                  sx={{ 
-                    bgcolor: '#fff', 
-                    color: 'grey.900', 
-                    fontWeight: 800,
-                    '&:hover': { bgcolor: 'grey.100' }
-                  }}
-                >
-                  Contact Support
-                </Button>
-              </Paper>
             </Stack>
           </Grid>
         </Grid>
       </Container>
 
       <ChatAssistant />
-
       <ConfirmationPopup
         open={isConfirming}
         onClose={() => toggleConfirmation(false)}

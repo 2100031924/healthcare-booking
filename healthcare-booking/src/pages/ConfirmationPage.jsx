@@ -14,7 +14,7 @@ import {
   Avatar,
   Grid
 } from '@mui/material'
-import { CheckCircle, Calendar, Clock, User, ArrowLeft, Download, Share2, MapPin, Printer, ExternalLink, X } from 'lucide-react'
+import { CheckCircle, Calendar, Clock, User, ArrowLeft, MapPin, Printer, ExternalLink } from 'lucide-react'
 import { formatTime, formatDisplayDate } from '../utils/helpers'
 import { useBooking } from '../context/BookingContext'
 
@@ -198,25 +198,15 @@ export default function ConfirmationPage() {
               Done & Return Home
             </Button>
             
-            <Stack direction="row" spacing={2}>
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<Printer size={18} />}
-                onClick={handlePrint}
-                sx={{ borderRadius: 3, py: 1.75, fontWeight: 700, borderColor: 'grey.200', color: 'text.secondary' }}
-              >
-                Print
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<Share2 size={18} />}
-                sx={{ borderRadius: 3, py: 1.75, fontWeight: 700, borderColor: 'grey.200', color: 'text.secondary' }}
-              >
-                Share
-              </Button>
-            </Stack>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<Printer size={18} />}
+              onClick={handlePrint}
+              sx={{ borderRadius: 3, py: 1.75, fontWeight: 700, borderColor: 'grey.200', color: 'text.secondary' }}
+            >
+              Print Ticket
+            </Button>
           </Stack>
 
           <Typography variant="body2" sx={{ mt: 5, color: 'text.disabled', fontWeight: 500 }}>
