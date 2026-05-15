@@ -1,25 +1,21 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material'
 import { BookingProvider } from './context/BookingContext'
-import { themeConfig } from './constants/theme'
 import BookingPage from './pages/BookingPage'
 import ConfirmationPage from './pages/ConfirmationPage'
-
-const theme = createTheme(themeConfig)
+import './styles/App.css'
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BookingProvider>
-        <BrowserRouter>
+    <BookingProvider>
+      <BrowserRouter>
+        <div className="wrap">
           <Routes>
             <Route path="/" element={<BookingPage />} />
             <Route path="/confirmation" element={<ConfirmationPage />} />
           </Routes>
-        </BrowserRouter>
-      </BookingProvider>
-    </ThemeProvider>
+        </div>
+      </BrowserRouter>
+    </BookingProvider>
   )
 }
 

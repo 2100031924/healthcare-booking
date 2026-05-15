@@ -1,0 +1,19 @@
+.selector {
+  margin: 10px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.slot {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+
+.slot.selected {
+  background: #28a745;
+  color: white;
+}

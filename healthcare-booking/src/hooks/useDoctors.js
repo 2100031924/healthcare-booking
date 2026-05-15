@@ -1,27 +1,23 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { doctors } from '../data/doctors'
 
-export function useDoctors(initialSpecialization = '') {
-  const [specialization, setSpecialization] = useState(initialSpecialization)
+export function useDoctors() {
+  const [specialization, setSpecialization] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const filteredDoctors = useMemo(() => {
-    return doctors.filter((doctor) => {
-      const matchesSpec = !specialization || doctor.specialization === specialization
-      const matchesSearch = !searchQuery || 
-        doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doctor.about.toLowerCase().includes(searchQuery.toLowerCase())
-      
-      return matchesSpec && matchesSearch
-    })
-  }, [specialization, searchQuery])
+  const filteredDoctors = doctors.filter((doctor) => {
+    const matchesSpec = !specialization || doctor.specialization === specialization
+    const matchesSearch = !searchQuery || 
+      doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    return matchesSpec && matchesSearch
+  })
 
   return {
     doctors: filteredDoctors,
     specialization,
     setSpecialization,
     searchQuery,
-    setSearchQuery,
-    totalCount: filteredDoctors.length,
+    setSearchQuery
   }
 }

@@ -1,0 +1,12 @@
+.view {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.ticket {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background: white;
+  margin: 20px auto;
+  max-width: 400px;
+}

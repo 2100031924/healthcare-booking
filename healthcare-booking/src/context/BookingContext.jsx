@@ -1,103 +1,52 @@
-import { createContext, useContext, useReducer, useCallback } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 const BookingContext = createContext()
 
-const initialState = {
-  selectedDoctor: null,
-  selectedDate: null,
-  selectedSlot: null,
-  patientDetails: {
+export function BookingProvider({ children }) {
+  const [selectedDoctor, setSelectedDoctor] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedSlot, setSelectedSlot] = useState(null)
+  const [currentStep, setCurrentStep] = useState(0)
+  const [isConfirming, setIsConfirming] = useState(false)
+  const [patientDetails, setPatientDetails] = useState({
     name: '',
     email: '',
     phone: '',
     reason: '',
-  },
-  currentStep: 0,
-  isConfirming: false,
-}
+  })
 
-function bookingReducer(state, action) {
-  switch (action.type) {
-    case 'SET_DOCTOR':
-      return {
-        ...state,
-        selectedDoctor: action.payload,
-        selectedDate: null,
-        selectedSlot: null,
-        currentStep: 1,
-      }
-    case 'SET_DATE':
-      return {
-        ...state,
-        selectedDate: action.payload,
-        selectedSlot: null,
-      }
-    case 'SET_SLOT':
-      return {
-        ...state,
-        selectedSlot: action.payload,
-      }
-    case 'SET_PATIENT_DETAILS':
-      return {
-        ...state,
-        patientDetails: { ...state.patientDetails, ...action.payload },
-      }
-    case 'SET_STEP':
-      return {
-        ...state,
-        currentStep: action.payload,
-      }
-    case 'TOGGLE_CONFIRMATION':
-      return {
-        ...state,
-        isConfirming: action.payload !== undefined ? action.payload : !state.isConfirming,
-      }
-    case 'RESET_BOOKING':
-      return initialState
-    default:
-      return state
+  const updateDoctor = (doctor) => {
+    setSelectedDoctor(doctor)
+    setSelectedDate(null)
+    setSelectedSlot(null)
+    setCurrentStep(1)
   }
-}
 
-export function BookingProvider({ children }) {
-  const [state, dispatch] = useReducer(bookingReducer, initialState)
+  const updatePatientDetails = (details) => {
+    setPatientDetails({ ...patientDetails, ...details })
+  }
 
-  const setDoctor = useCallback((doctor) => {
-    dispatch({ type: 'SET_DOCTOR', payload: doctor })
-  }, [])
-
-  const setDate = useCallback((date) => {
-    dispatch({ type: 'SET_DATE', payload: date })
-  }, [])
-
-  const setSlot = useCallback((slot) => {
-    dispatch({ type: 'SET_SLOT', payload: slot })
-  }, [])
-
-  const setPatientDetails = useCallback((details) => {
-    dispatch({ type: 'SET_PATIENT_DETAILS', payload: details })
-  }, [])
-
-  const setStep = useCallback((step) => {
-    dispatch({ type: 'SET_STEP', payload: step })
-  }, [])
-
-  const toggleConfirmation = useCallback((isOpen) => {
-    dispatch({ type: 'TOGGLE_CONFIRMATION', payload: isOpen })
-  }, [])
-
-  const resetBooking = useCallback(() => {
-    dispatch({ type: 'RESET_BOOKING' })
-  }, [])
+  const resetBooking = () => {
+    setSelectedDoctor(null)
+    setSelectedDate(null)
+    setSelectedSlot(null)
+    setCurrentStep(0)
+    setPatientDetails({ name: '', email: '', phone: '', reason: '' })
+  }
 
   const value = {
-    ...state,
-    setDoctor,
-    setDate,
-    setSlot,
-    setPatientDetails,
-    setStep,
-    toggleConfirmation,
+    selectedDoctor,
+    selectedDate,
+    selectedSlot,
+    patientDetails,
+    currentStep,
+    isConfirming,
+    setDoctor: updateDoctor,
+    setDate: setSelectedDate,
+    setSlot: setSelectedSlot,
+    setPatientDetails: updatePatientDetails,
+    setStep: setCurrentStep,
+    toggleConfirmation: setIsConfirming,
     resetBooking,
   }
 
@@ -105,9 +54,5 @@ export function BookingProvider({ children }) {
 }
 
 export function useBooking() {
-  const context = useContext(BookingContext)
-  if (!context) {
-    throw new Error('useBooking must be used within a BookingProvider')
-  }
-  return context
+  return useContext(BookingContext)
 }
