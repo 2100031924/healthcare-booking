@@ -3,8 +3,8 @@ import '../styles/SlotSelector.css'
 export default function SlotSelector({ slots, selectedSlot, onSelectSlot }) {
   return (
     <div className="selector">
-      <h4>Time</h4>
-      <div className="grid">
+      <h4>Select Available Time</h4>
+      <div className="slot-grid">
         {slots.map((slot, i) => (
           <button 
             key={i} 

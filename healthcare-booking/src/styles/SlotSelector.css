@@ -1,19 +1,49 @@
 .selector {
-  margin: 10px 0;
+  margin-bottom: 2rem;
+  text-align: left;
 }
 
-.grid {
+.selector h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.slot-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
 }
 
 .slot {
-  padding: 5px;
-  border: 1px solid #ccc;
+  padding: 0.75rem 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all 0.2s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.slot:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--background);
 }
 
 .slot.selected {
-  background: #28a745;
+  background: var(--primary);
+  border-color: var(--primary);
   color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.slot:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  border-style: dashed;
 }

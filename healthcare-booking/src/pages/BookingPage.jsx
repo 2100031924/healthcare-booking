@@ -32,21 +32,21 @@ export default function BookingPage() {
 
   return (
     <div>
-      <div className="header">
+      <header className="header">
         <h1>Medical Booking</h1>
-      </div>
+      </header>
 
-      <div className="steps" style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '20px' }}>
-        <span className={`step ${currentStep === 0 ? 'active' : ''}`} style={{ fontWeight: currentStep === 0 ? 'bold' : 'normal', color: currentStep === 0 ? 'white' : '#666' }}>Step 1</span>
-        <span className={`step ${currentStep === 1 ? 'active' : ''}`} style={{ fontWeight: currentStep === 1 ? 'bold' : 'normal', color: currentStep === 1 ? 'white' : '#666' }}>Step 2</span>
-        <span className={`step ${currentStep === 2 ? 'active' : ''}`} style={{ fontWeight: currentStep === 2 ? 'bold' : 'normal', color: currentStep === 2 ? 'white' : '#666' }}>Step 3</span>
+      <div className="steps">
+        <span className={`step ${currentStep === 0 ? 'active' : ''}`}>1. Select Doctor</span>
+        <span className={`step ${currentStep === 1 ? 'active' : ''}`}>2. Schedule</span>
+        <span className={`step ${currentStep === 2 ? 'active' : ''}`}>3. Details</span>
       </div>
 
       {currentStep === 0 && (
-        <div>
+        <div className="search-container">
           <input 
             type="text" 
-            placeholder="Search..." 
+            placeholder="Search doctors by name or specialty..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -59,41 +59,48 @@ export default function BookingPage() {
       )}
 
       {currentStep === 1 && (
-        <div style={{ textAlign: 'center' }}>
-          <button onClick={handleBack}>Back</button>
-          <h2>{selectedDoctor.name}</h2>
+        <div className="form-container">
+          <div className="nav-buttons" style={{ marginBottom: '1.5rem' }}>
+            <button className="btn-outline" onClick={handleBack}>← Back</button>
+          </div>
+          <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>{selectedDoctor.name}</h2>
           <DatePicker selectedDate={selectedDate} onSelectDate={setDate} />
           <SlotSelector slots={selectedDoctor.availableSlots} selectedSlot={selectedSlot} onSelectSlot={setSlot} />
-          <button disabled={!selectedDate || !selectedSlot} onClick={handleNext}>Next</button>
+          <div className="nav-buttons" style={{ marginTop: '2rem' }}>
+            <div />
+            <button className="btn-primary" disabled={!selectedDate || !selectedSlot} onClick={handleNext}>Next Step</button>
+          </div>
         </div>
       )}
 
       {currentStep === 2 && (
-        <div className="form">
-          <button onClick={handleBack}>Back</button>
-          <h2>Patient Info</h2>
+        <div className="form-container">
+          <div className="nav-buttons" style={{ marginBottom: '1.5rem' }}>
+            <button className="btn-outline" onClick={handleBack}>← Back</button>
+          </div>
+          <h2 className="form-title">Patient Information</h2>
           <div className="group">
-            <label>Name</label>
-            <input value={patientDetails.name} onChange={(e) => setPatientDetails({ name: e.target.value })} />
+            <label>Full Name</label>
+            <input value={patientDetails.name} onChange={(e) => setPatientDetails({ name: e.target.value })} placeholder="John Doe" />
           </div>
           <div className="group">
-            <label>Email</label>
-            <input value={patientDetails.email} onChange={(e) => setPatientDetails({ email: e.target.value })} />
+            <label>Email Address</label>
+            <input value={patientDetails.email} onChange={(e) => setPatientDetails({ email: e.target.value })} placeholder="john@example.com" />
           </div>
           <div className="group">
-            <label>Phone</label>
-            <input value={patientDetails.phone} onChange={(e) => setPatientDetails({ phone: e.target.value })} />
+            <label>Phone Number</label>
+            <input value={patientDetails.phone} onChange={(e) => setPatientDetails({ phone: e.target.value })} placeholder="+1 (555) 000-0000" />
           </div>
-          <button onClick={() => toggleConfirmation(true)}>Submit</button>
+          <button className="btn-primary" style={{ width: '100%', marginTop: '1rem' }} onClick={() => toggleConfirmation(true)}>Confirm Booking</button>
         </div>
       )}
 
       {selectedDoctor && (
         <div className="summary">
-          <h3>Summary</h3>
-          <p>Doctor: {selectedDoctor.name}</p>
-          {selectedDate && <p>Date: {selectedDate.toDateString()}</p>}
-          {selectedSlot && <p>Time: {selectedSlot.time}</p>}
+          <h3>Booking Summary</h3>
+          <p><strong>Doctor:</strong> {selectedDoctor.name}</p>
+          {selectedDate && <p><strong>Date:</strong> {selectedDate.toDateString()}</p>}
+          {selectedSlot && <p><strong>Time:</strong> {selectedSlot.time}</p>}
         </div>
       )}
 
