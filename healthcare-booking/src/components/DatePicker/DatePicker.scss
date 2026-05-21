@@ -90,8 +90,23 @@
   font-weight: 900;
 }
 
+@media (max-width: 768px) {
+  .picker { margin-bottom: 1.75rem; }
+  .picker h4 { font-size: 0.95rem; margin-bottom: 0.85rem; }
+  .date-grid { gap: 0.65rem; padding: 0.65rem 0.25rem; }
+}
+
 @media (max-width: 480px) {
   .day { width: 64px; height: 86px; border-radius: var(--radius-md); }
   .day .weekday { font-size: 0.7rem; }
   .day .date-num { font-size: 1.35rem; }
+  .date-grid { gap: 0.5rem; padding: 0.5rem 0.15rem; }
+}
+
+@media (max-width: 360px) {
+  .day { width: 54px; height: 76px; }
+  .day .weekday { font-size: 0.6rem; letter-spacing: 0.5px; }
+  .day .date-num { font-size: 1.15rem; }
+  .picker h4 { font-size: 0.85rem; }
+  .picker h4::before { width: 4px; height: 16px; }
 }

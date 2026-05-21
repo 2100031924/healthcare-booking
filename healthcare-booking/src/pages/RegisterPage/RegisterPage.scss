@@ -672,3 +672,78 @@
     }
   }
 }
+
+
+/* Extra small screen adjustments */
+@media (max-width: 480px) {
+  .register-right-panel {
+    padding: 1.5rem 1rem;
+  }
+
+  .register-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .register-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .register-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .register-header p {
+    font-size: 0.875rem;
+  }
+
+  .register-form .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .register-form .form-group label {
+    font-size: 0.8rem;
+  }
+
+  .register-form .input-wrapper input {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  .register-form .input-wrapper .input-icon {
+    font-size: 18px;
+    left: 0.75rem;
+  }
+
+  .register-form .checkbox-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .register-form .submit-btn {
+    padding: 0.875rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+  }
+
+  .register-form .login-link {
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .register-card {
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+  }
+
+  .register-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .register-form .input-wrapper input {
+    padding: 0.625rem 1rem 0.625rem 2.25rem;
+    font-size: 0.85rem;
+  }
+}

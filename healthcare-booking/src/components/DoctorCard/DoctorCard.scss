@@ -127,3 +127,47 @@
   .card h4 { font-size: 1.15rem; }
   .card p { font-size: 0.85rem; }
 }
+
+/* Extra small screen adjustments */
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem 1rem;
+    border-radius: var(--radius-lg);
+  }
+  .card img {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1rem;
+    border-width: 3px;
+  }
+  .card h4 {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+  .card p {
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-btn {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    padding: 1.25rem 0.875rem;
+    border-radius: var(--radius);
+  }
+  .card img {
+    width: 64px;
+    height: 64px;
+  }
+  .card h4 {
+    font-size: 0.95rem;
+  }
+  .card p {
+    font-size: 0.75rem;
+  }
+}

@@ -6,7 +6,7 @@ const __dirname = path.resolve();
 
 export default {
   mode: process.env.NODE_ENV || 'development',
-  entry: './src/index.jsx',
+  entry: './src/main.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
@@ -39,7 +39,16 @@ export default {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              api: 'modern-compiler',
+              sassOptions: {
+                silenceDeprecations: ['legacy-js-api'],
+                quietDeps: true,
+              },
+            },
+          },
         ],
       },
       {

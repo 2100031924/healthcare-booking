@@ -1,685 +1,593 @@
 .patient-checkin-page {
-  max-width: 1600px;
+  max-width: 1200px;
   margin: 0 auto;
 
   .page-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 2rem;
+      gap: 1rem;
 
-      h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0 0 0.5rem;
-      }
+      h1 { margin: 0; font-size: 1.35rem; font-weight: 800; }
+      p { margin: 0.2rem 0 0; color: var(--text-muted); font-size: 0.82rem; }
+    }
 
-      p {
-        color: #64748b;
-        margin: 0;
-        font-size: 1rem;
-      }
+    .checkin-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-shrink: 0;
 
-      .checkin-progress {
+      .progress-step {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.35rem;
+        padding: 0.4rem 0.65rem;
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: var(--transition);
 
-        .progress-step {
+        .step-number {
+          width: 20px; height: 20px;
+          border-radius: 50%;
+          background: var(--border);
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-
-          .step-number {
-            width: 32px;
-            height: 32px;
-            background: #e2e8f0;
-            color: #64748b;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-          }
-
-          .step-label {
-            font-size: 0.85rem;
-            color: #64748b;
-            font-weight: 500;
-
-            @media (max-width: 640px) {
-              display: none;
-            }
-          }
-
-          &.completed {
-            .step-number {
-              background: #10b981;
-              color: white;
-            }
-            .step-label {
-              color: #10b981;
-            }
-          }
+          justify-content: center;
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: var(--text-muted);
         }
 
-        .progress-line {
-          width: 40px;
-          height: 2px;
-          background: #e2e8f0;
-
-          @media (max-width: 640px) {
-            width: 20px;
-          }
+        &.completed {
+          background: rgba(16, 185, 129, 0.08);
+          border-color: var(--success);
+          color: var(--success);
+          .step-number { background: var(--success); color: white; }
         }
       }
 
-      @media (max-width: 768px) {
-        flex-direction: column;
-        
-        h1 { font-size: 1.5rem; }
+      .progress-line {
+        width: 20px; height: 2px;
+        background: var(--border);
+        border-radius: 1px;
       }
     }
   }
 
   .otp-demo-banner {
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-    border: 1px solid #a7f3d0;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
-    color: #065f46;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(99, 102, 241, 0.06);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius);
+    color: var(--primary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
 
-    .banner-icon {
-      color: #10b981;
-      font-size: 24px;
-    }
-
-    strong {
-      font-size: 1.25rem;
-      letter-spacing: 2px;
-      color: #059669;
-    }
+    .banner-icon { font-size: 1.2rem; }
+    strong { margin-left: 0.25rem; }
   }
 
   .checkin-info-header {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
-    border: 1px solid #ccfbf1;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    box-shadow: 0 2px 4px rgba(20, 184, 166, 0.05);
+    gap: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
     .checkin-info-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      flex: 1;
-      min-width: 150px;
+      gap: 0.4rem;
+      white-space: nowrap;
+      flex-shrink: 0;
 
-      .info-icon {
-        color: #14b8a6;
-        font-size: 18px;
-      }
-
-      .info-label {
-        font-size: 0.7rem;
-        color: #94a3b8;
-        text-transform: uppercase;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-      }
-
-      .info-value {
-        font-size: 0.95rem;
-        color: #1e293b;
-        font-weight: 700;
-      }
+      .info-icon { font-size: 1rem; color: var(--primary); }
+      .info-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+      .info-value { font-size: 0.82rem; color: var(--text-primary); font-weight: 700; }
 
       .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-
+        width: 8px; height: 8px; border-radius: 50%;
         &.status-waiting { background: #f59e0b; }
-        &.status-checked-in { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
-        &.status-in-consultation { background: #14b8a6; box-shadow: 0 0 6px rgba(20, 184, 166, 0.4); }
-        &.status-completed { background: #a855f7; box-shadow: 0 0 6px rgba(168, 85, 247, 0.4); }
+        &.status-checked-in { background: var(--success); }
+        &.status-in-consultation { background: var(--primary); }
+        &.status-completed { background: var(--text-muted); }
       }
+      .info-value.status-waiting { color: #f59e0b; }
+      .info-value.status-checked-in { color: var(--success); }
+      .info-value.status-in-consultation { color: var(--primary); }
+      .info-value.status-completed { color: var(--text-muted); }
     }
 
     .checkin-info-divider {
-      width: 1px;
-      height: 30px;
-      background: #ccfbf1;
-    }
-
-    @media (max-width: 768px) {
-      gap: 1rem;
-      padding: 1rem;
-
-      .checkin-info-divider {
-        display: none;
-      }
-
-      .checkin-info-item {
-        min-width: 100%;
-      }
+      width: 1px; height: 28px;
+      background: var(--border);
+      flex-shrink: 0;
     }
   }
 
   .checkin-layout {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 2rem;
-
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr;
-    }
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
   }
 
   .left-panel {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-
-    .no-booking-card {
-      background: white;
-      border-radius: 20px;
-      padding: 3rem 2rem;
-      border: 2px dashed #e2e8f0;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-
-      .no-booking-icon {
-        font-size: 64px;
-        color: #94a3b8;
-      }
-
-      h3 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #334155;
-        margin: 0;
-      }
-
-      p {
-        color: #64748b;
-        margin: 0;
-        font-size: 0.95rem;
-      }
-
-      .btn-book {
-        padding: 0.875rem 2rem;
-        background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.95rem;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(20, 184, 166, 0.4);
-        }
-      }
-    }
+    gap: 1.25rem;
 
     .patient-card {
-      background: white;
-      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
       padding: 1.5rem;
-      border: 1px solid rgba(226, 232, 240, 0.6);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
 
       .patient-header {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid #f1f5f9;
+        gap: 0.85rem;
+        margin-bottom: 1.15rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-light);
 
         .patient-avatar {
-          width: 56px;
-          height: 56px;
-          background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
-          border-radius: 50%;
+          width: 44px; height: 44px;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+          border-radius: var(--radius);
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-
-          svg { font-size: 28px; }
+          svg { font-size: 1.3rem; }
         }
 
         .patient-info {
           flex: 1;
-
-          h3 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0f172a;
-          }
-
-          .patient-id {
-            margin: 0.25rem 0 0;
-            font-size: 0.85rem;
-            color: #64748b;
-          }
+          h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+          .patient-id { font-size: 0.72rem; color: var(--text-muted); margin: 0.1rem 0 0; }
         }
 
         .status-badge {
-          padding: 0.5rem 1rem;
-          border-radius: 9999px;
-          color: white;
-          font-size: 0.8rem;
+          padding: 0.3rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.72rem;
           font-weight: 700;
           text-transform: uppercase;
-
-          &.status-checked-in { background: #10b981; }
-          &.status-waiting { background: #f59e0b; }
-          &.status-in-consultation { background: #14b8a6; }
-          &.status-completed { background: #a855f7; }
+          letter-spacing: 0.03em;
+          &.status-waiting { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
+          &.status-checked-in { background: rgba(16, 185, 129, 0.08); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.15); }
+          &.status-in-consultation { background: rgba(99, 102, 241, 0.08); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.15); }
+          &.status-completed { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
         }
       }
 
       .patient-details-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-
-        @media (max-width: 640px) {
-          grid-template-columns: 1fr;
-        }
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
 
         .detail-item {
           display: flex;
           align-items: flex-start;
-          gap: 0.75rem;
-          padding: 1rem;
-          background: #f8fafc;
-          border-radius: 12px;
+          gap: 0.6rem;
+          padding: 0.6rem;
+          background: var(--bg-tertiary);
+          border-radius: var(--radius);
+          border: 1px solid var(--border);
 
-          svg {
-            color: #14b8a6;
-            font-size: 22px;
-            margin-top: 2px;
-          }
+          svg { font-size: 1rem; color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
 
-          .label {
-            display: block;
-            font-size: 0.75rem;
-            color: #64748b;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 0.25rem;
-          }
-
-          .value {
-            display: block;
-            font-size: 1rem;
-            color: #0f172a;
-            font-weight: 600;
-          }
+          .label { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.1rem; }
+          .value { display: block; font-size: 0.82rem; color: var(--text-primary); font-weight: 700; }
         }
       }
     }
 
     .queue-card {
-      background: white;
-      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
       padding: 1.5rem;
-      border: 1px solid rgba(226, 232, 240, 0.6);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
 
-      h2 {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0 0 1.5rem;
-      }
+      h2 { margin: 0 0 1rem; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
 
       .queue-display {
-        display: flex;
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid #f1f5f9;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1.15rem;
 
         .queue-position, .queue-estimated {
-          flex: 1;
           text-align: center;
           padding: 1rem;
-          background: #f8fafc;
-          border-radius: 12px;
+          background: var(--bg-tertiary);
+          border-radius: var(--radius);
+          border: 1px solid var(--border);
 
-          .position-number, .time {
-            display: block;
-            font-size: 2rem;
-            font-weight: 800;
-            color: #14b8a6;
-            line-height: 1;
-          }
-
-          .position-label, .label {
-            display: block;
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 0.5rem;
-            font-weight: 600;
-          }
+          .position-number { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+          .time { display: block; font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
+          .position-label, .label { display: block; font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.25rem; }
         }
       }
 
       .queue-steps {
         display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.65rem;
+        background: var(--bg-tertiary);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
 
         .queue-step {
+          flex: 1;
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.75rem;
-          border-radius: 10px;
-          font-size: 0.9rem;
-          color: #94a3b8;
-          font-weight: 500;
+          justify-content: center;
+          gap: 0.25rem;
+          padding: 0.4rem 0.35rem;
+          border-radius: var(--radius);
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: var(--text-muted);
+          text-align: center;
+          white-space: nowrap;
 
-          svg { font-size: 20px; }
+          svg { font-size: 0.85rem; }
+          .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
 
-          .step-dot {
-            width: 8px;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 50%;
-          }
-
-          &.completed {
-            color: #10b981;
-            background: #ecfdf5;
-          }
-
-          &.current {
-            color: #f59e0b;
-            background: #fffbeb;
-
-            .step-dot {
-              background: #f59e0b;
-              animation: pulse 1.5s infinite;
-            }
-          }
+          &.completed { background: rgba(16, 185, 129, 0.08); color: var(--success); svg { color: var(--success); } }
+          &.current { background: rgba(99, 102, 241, 0.08); color: var(--primary); .step-dot { background: var(--primary); } }
         }
       }
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: 0.5; }
-    }
-
     .digital-token-card {
-      background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
-      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
       padding: 1.5rem;
-      color: white;
+      box-shadow: var(--shadow-sm);
+      animation: fadeInUp 0.4s ease-out;
+
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
       .token-header {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1.5rem;
-
-        svg { font-size: 28px; }
-
-        h2 {
-          margin: 0;
-          font-size: 1.25rem;
-          font-weight: 700;
-        }
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        svg { color: var(--primary); font-size: 1.3rem; }
+        h2 { margin: 0; font-size: 1rem; font-weight: 700; }
       }
 
       .token-body {
         display: flex;
-        gap: 1.5rem;
-
-        @media (max-width: 640px) {
-          flex-direction: column;
-        }
+        gap: 1rem;
+        align-items: flex-start;
 
         .qr-code {
-          width: 100px;
-          height: 100px;
+          width: 100px; height: 100px;
           background: white;
-          border-radius: 12px;
+          border-radius: var(--radius-lg);
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-
-          svg {
-            font-size: 60px;
-            color: #0f172a;
-          }
+          svg { font-size: 3rem; color: #1e293b; }
         }
 
         .token-details {
           flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
 
           .token-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            .label {
-              color: rgba(255, 255, 255, 0.8);
-              font-size: 0.85rem;
-            }
-
-            .value {
-              font-weight: 600;
-            }
+            align-items: center;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            .label { color: var(--text-muted); font-weight: 500; }
+            .value { color: var(--text-primary); font-weight: 700; }
+            &:last-child { border-bottom: none; }
           }
         }
+      }
+    }
+
+    .no-booking-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 3rem 2rem;
+      text-align: center;
+      border: 2px dashed var(--border);
+
+      .no-booking-icon { font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; opacity: 0.4; }
+      h3 { margin: 0 0 0.5rem; font-size: 1.15rem; font-weight: 700; }
+      p { margin: 0 0 1.25rem; color: var(--text-muted); font-size: 0.85rem; }
+
+      .btn-book {
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4); }
       }
     }
   }
 
   .right-panel {
     .checkin-form-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(226, 232, 240, 0.6);
-      position: sticky;
-      top: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
 
-      @media (max-width: 1024px) {
-        position: static;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin: 0 0 1.5rem;
-      }
+      h2 { margin: 0 0 1.25rem; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
 
       .checkin-form {
         .form-group {
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
 
           label {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.78rem;
             font-weight: 600;
-            color: #334155;
-            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
 
-            .verified-icon {
-              color: #10b981;
-              font-size: 18px;
-            }
+            .verified-icon { color: var(--success); font-size: 1rem; }
           }
 
           input, textarea {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            transition: all 0.2s;
+            padding: 0.65rem 0.85rem;
+            background: var(--bg-tertiary);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: var(--transition);
 
-            &:focus {
-              outline: none;
-              border-color: #14b8a6;
-              box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
-            }
-
-            &.error { 
-              border-color: #ef4444; 
-              background: #fef2f2; 
-            }
+            &:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+            &::placeholder { color: var(--text-muted); }
+            &.error { border-color: var(--danger); background: var(--danger-bg); &:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1); } }
           }
+
+          textarea { resize: vertical; min-height: 60px; }
 
           .input-with-button {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.4rem;
 
-            input { flex: 1; }
+            input { flex: 1; border-radius: var(--radius) 0 0 var(--radius); }
+          }
 
-            button {
-              padding: 0.875rem 1.25rem;
-              border: none;
-              border-radius: 12px;
-              font-weight: 700;
-              cursor: pointer;
-              transition: all 0.2s;
-              white-space: nowrap;
-              font-size: 0.9rem;
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
+          .btn-send-otp, .btn-verify {
+            padding: 0.65rem 1rem;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            background: rgba(99, 102, 241, 0.06);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
 
-              svg { font-size: 18px; }
-            }
-
-            .btn-send-otp {
-              background: #f59e0b;
-              color: white;
-
-              &:hover:not(:disabled) { background: #d97706; }
-              &:disabled { background: #94a3b8; cursor: not-allowed; }
-            }
-
-            .btn-verify {
-              background: #10b981;
-              color: white;
-
-              &:hover:not(:disabled) { background: #059669; }
-              &:disabled { background: #94a3b8; cursor: not-allowed; }
-
-              &.verified {
-                background: #10b981;
-                cursor: default;
-              }
-            }
+            &:hover:not(:disabled) { background: var(--primary); color: white; }
+            &:disabled { opacity: 0.5; cursor: not-allowed; }
+            &.verified { background: var(--success); border-color: var(--success); color: white; }
           }
 
           .error-text {
             display: block;
-            font-size: 0.8rem;
-            color: #ef4444;
-            margin-top: 0.5rem;
-            font-weight: 500;
+            margin-top: 0.35rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--danger);
           }
         }
 
         .form-actions {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
-          margin-top: 2rem;
+          gap: 0.5rem;
+          margin-top: 1.25rem;
 
-          button {
-            padding: 1rem;
-            border-radius: 12px;
+          .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
             font-weight: 700;
+            font-size: 0.88rem;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-
-            svg { font-size: 20px; }
-          }
-
-          .btn-primary {
-            background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
-            color: white;
-            border: none;
-
-            &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20, 184, 166, 0.4); }
-            &:disabled { background: #94a3b8; cursor: not-allowed; }
+            gap: 0.4rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            svg { font-size: 1.1rem; }
+            &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4); }
+            &:disabled { opacity: 0.5; cursor: not-allowed; }
           }
 
           .btn-advance {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-
-            &:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4); }
+            padding: 0.65rem;
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--success);
+            border: 1.5px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            &:hover { background: var(--success); color: white; border-color: var(--success); }
           }
 
-          .btn-outline { 
-            background: transparent; 
-            color: #14b8a6; 
-            border: 2px solid #14b8a6;
-            
-            &:hover { background: #f0fdfa; }
+          .btn-outline {
+            padding: 0.65rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            &:hover { border-color: var(--primary); color: var(--primary); }
           }
 
           .btn-danger {
+            padding: 0.65rem;
             background: transparent;
-            color: #ef4444;
-            border: 2px solid #ef4444;
-
-            &:hover { background: #fef2f2; }
+            color: var(--danger);
+            border: 1.5px solid var(--danger);
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            &:hover { background: var(--danger); color: white; }
           }
         }
       }
     }
+  }
+}
+
+@media (max-width: 1024px) {
+  .patient-checkin-page .checkin-layout {
+    grid-template-columns: 1fr;
+  }
+  .patient-checkin-page .right-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .patient-checkin-page {
+    .page-header .header-content { flex-direction: column; }
+    .page-header .checkin-progress { width: 100%; justify-content: center; }
+    .checkin-info-header { gap: 0.5rem; padding: 0.7rem 0.85rem; flex-wrap: nowrap; }
+    .checkin-info-header .checkin-info-item { gap: 0.3rem; }
+    .checkin-info-header .checkin-info-item .info-label { display: none; }
+    .checkin-info-header .checkin-info-divider { height: 20px; }
+    .left-panel .patient-card { padding: 1.15rem; }
+    .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr 1fr; }
+    .left-panel .queue-card .queue-steps { flex-wrap: nowrap; overflow-x: auto; }
+    .left-panel .queue-card .queue-steps .queue-step { flex-shrink: 0; }
+  }
+}
+
+@media (max-width: 480px) {
+  .patient-checkin-page {
+    .page-header { margin-bottom: 1rem; }
+    .page-header .header-content h1 { font-size: 1.1rem; }
+    .page-header .header-content p { font-size: 0.75rem; }
+    .page-header .checkin-progress { gap: 0.2rem; }
+    .page-header .checkin-progress .progress-step { padding: 0.3rem 0.45rem; font-size: 0.65rem; }
+    .page-header .checkin-progress .progress-step .step-number { width: 16px; height: 16px; font-size: 0.55rem; }
+    .page-header .checkin-progress .progress-line { width: 12px; }
+    .checkin-info-header { padding: 0.55rem 0.65rem; border-radius: var(--radius); }
+    .checkin-info-header .checkin-info-item .info-icon { font-size: 0.85rem; }
+    .checkin-info-header .checkin-info-item .info-value { font-size: 0.75rem; }
+    .checkin-layout { gap: 1rem; }
+    .left-panel { gap: 1rem; }
+    .left-panel .patient-card { padding: 0.85rem; border-radius: var(--radius-lg); }
+    .left-panel .patient-card .patient-header { gap: 0.6rem; }
+    .left-panel .patient-card .patient-header .patient-avatar { width: 36px; height: 36px; svg { font-size: 1.1rem; } }
+    .left-panel .patient-card .patient-header .patient-info h3 { font-size: 0.88rem; }
+    .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr; gap: 0.45rem; }
+    .left-panel .patient-card .patient-details-grid .detail-item { padding: 0.45rem; }
+    .left-panel .patient-card .patient-details-grid .detail-item .value { font-size: 0.78rem; }
+    .left-panel .patient-card .patient-header .status-badge { font-size: 0.65rem; padding: 0.2rem 0.55rem; }
+    .left-panel .queue-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .left-panel .queue-card h2 { font-size: 0.9rem; }
+    .left-panel .queue-card .queue-display { gap: 0.5rem; }
+    .left-panel .queue-card .queue-display .queue-position, .left-panel .queue-card .queue-display .queue-estimated { padding: 0.75rem; }
+    .left-panel .queue-card .queue-display .queue-position .position-number { font-size: 1.5rem; }
+    .left-panel .queue-card .queue-display .queue-estimated .time { font-size: 1.2rem; }
+    .left-panel .queue-card .queue-steps { padding: 0.45rem; }
+    .left-panel .queue-card .queue-steps .queue-step { font-size: 0.6rem; padding: 0.3rem 0.25rem; }
+    .left-panel .digital-token-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .left-panel .digital-token-card .token-header h2 { font-size: 0.9rem; }
+    .left-panel .digital-token-card .token-body { flex-direction: column; align-items: center; }
+    .left-panel .digital-token-card .token-body .qr-code { width: 80px; height: 80px; }
+    .left-panel .digital-token-card .token-body .token-details .token-row { font-size: 0.72rem; }
+    .right-panel .checkin-form-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .right-panel .checkin-form-card h2 { font-size: 0.9rem; }
+    .right-panel .checkin-form-card .checkin-form .form-group input,
+    .right-panel .checkin-form-card .checkin-form .form-group textarea { padding: 0.55rem 0.7rem; font-size: 0.8rem; }
+    .right-panel .checkin-form-card .checkin-form .form-group .btn-send-otp,
+    .right-panel .checkin-form-card .checkin-form .form-group .btn-verify { padding: 0.55rem 0.75rem; font-size: 0.72rem; }
+    .right-panel .checkin-form-card .checkin-form .form-actions .btn-primary,
+    .right-panel .checkin-form-card .checkin-form .form-actions .btn-advance,
+    .right-panel .checkin-form-card .checkin-form .form-actions .btn-outline,
+    .right-panel .checkin-form-card .checkin-form .form-actions .btn-danger { font-size: 0.78rem; padding: 0.6rem; }
+  }
+}
+
+@media (max-width: 360px) {
+  .patient-checkin-page {
+    .page-header .header-content h1 { font-size: 1rem; }
+    .page-header .checkin-progress .progress-step { padding: 0.25rem 0.35rem; font-size: 0.58rem; }
+    .checkin-info-header .checkin-info-item .info-value { font-size: 0.7rem; }
+    .left-panel .patient-card { padding: 0.7rem; }
+    .left-panel .patient-card .patient-header .patient-avatar { width: 32px; height: 32px; }
+    .left-panel .patient-card .patient-header .patient-info h3 { font-size: 0.82rem; }
+    .left-panel .queue-card .queue-display .queue-position .position-number { font-size: 1.3rem; }
+    .left-panel .queue-card .queue-display .queue-estimated .time { font-size: 1rem; }
+    .right-panel .checkin-form-card { padding: 0.85rem; }
   }
 }

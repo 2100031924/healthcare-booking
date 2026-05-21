@@ -393,7 +393,7 @@ export default function GeneratePrescriptionPage() {
                       formik.handleChange(e);
                       setShowSuggestions(true);
                     }}
-                    onBlur={() => {
+                    onBlur={(e) => {
                       formik.handleBlur(e);
                       setTimeout(() => setShowSuggestions(false), 200);
                     }}
