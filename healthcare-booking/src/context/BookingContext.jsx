@@ -31,6 +31,7 @@ export function BookingProvider({ children }) {
     setSelectedDate(null)
     setSelectedSlot(null)
     setCurrentStep(0)
+    setIsConfirming(false)
     setPatientDetails({ name: '', email: '', phone: '', reason: '' })
   }
 
