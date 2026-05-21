@@ -4,77 +4,82 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(2, 6, 23, 0.85);
+  background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  animation: overlayFadeIn 0.25s ease-out;
   padding: 1.5rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(24px);
-  padding: 3rem;
-  border-radius: var(--radius-xl);
+  background: var(--bg-secondary);
+  padding: 2.5rem;
+  border-radius: var(--radius-2xl);
   width: 100%;
-  max-width: 480px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  max-width: 460px;
+  box-shadow: var(--shadow-xl);
   position: relative;
-  animation: modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border-top: 2px solid var(--border-highlight);
+  animation: modalEnter 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .modal::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00f2fe, transparent);
-  box-shadow: var(--glow);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  border-radius: 0 0 3px 3px;
 }
 
-@keyframes modalSlideUp {
-  from { transform: translateY(30px) scale(0.95); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
+@keyframes modalEnter {
+  from {
+    transform: translateY(24px) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 .modal h3 {
-  margin-top: 0;
-  font-size: 1.75rem;
-  font-weight: 900;
-  color: var(--text-main);
-  margin-bottom: 2rem;
+  margin: 0 0 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-primary);
   text-align: center;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .confirm-details {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 1.75rem;
+  background: var(--bg-tertiary);
+  padding: 1.5rem;
   border-radius: var(--radius-lg);
-  margin-bottom: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-light);
 }
 
 .confirm-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  font-size: 1rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .confirm-item:last-child {
@@ -84,43 +89,104 @@
 .confirm-label {
   color: var(--text-muted);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .confirm-value {
-  color: #00f2fe;
+  color: var(--text-primary);
   font-weight: 700;
   text-align: right;
   max-width: 60%;
   word-break: break-word;
-  text-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
 }
 
 .actions {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .actions button {
   flex: 1;
-  padding: 1.1rem 1.5rem;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 @media (max-width: 480px) {
-  .overlay { padding: 0; align-items: flex-end; }
+  .overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
   .modal {
-    padding: 2rem;
-    border-radius: 32px 32px 0 0;
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     max-width: 100%;
-    animation: modalSlideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: modalMobileEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  @keyframes modalSlideUpMobile {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+
+  @keyframes modalMobileEnter {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
-  .confirm-item { flex-direction: column; align-items: flex-start; gap: 0.4rem; margin-bottom: 1.25rem; }
-  .confirm-value { text-align: left; max-width: 100%; font-size: 1.1rem; }
-  .actions { flex-direction: column-reverse; gap: 1rem; }
+
+  .confirm-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-value {
+    text-align: left;
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .modal h3 {
+    font-size: 1.15rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .confirm-details {
+    padding: 1.15rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .modal {
+    padding: 1.5rem 1rem;
+  }
+
+  .modal h3 {
+    font-size: 1rem;
+  }
+
+  .confirm-details {
+    padding: 1rem;
+  }
+
+  .actions button {
+    padding: 0.7rem 1rem;
+    font-size: 0.8rem;
+  }
 }

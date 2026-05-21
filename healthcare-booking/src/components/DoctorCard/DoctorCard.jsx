@@ -3,7 +3,7 @@ import './DoctorCard.scss'
 export default function DoctorCard({ doctor, isSelected, onSelect }) {
   return (
     <div 
-      className={`card ${isSelected ? 'selected' : ''}`} 
+      className={`doctor-card ${isSelected ? 'selected' : ''}`} 
       onClick={onSelect}
     >
       <img src={doctor.image} alt={doctor.name} />

@@ -1,88 +1,121 @@
 .selector {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   text-align: left;
 }
 
 .selector h4 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-bottom: 1.25rem;
-  color: var(--text-main);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1.15rem;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .selector h4::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 20px;
+  width: 4px;
+  height: 18px;
   background: var(--primary);
-  border-radius: 3px;
-  box-shadow: var(--glow);
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 .slot-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 0.75rem;
 }
 
 .slot {
-  padding: 0.85rem 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
+  padding: 0.75rem 0.5rem;
+  background: var(--bg-tertiary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-muted);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   text-align: center;
-  backdrop-filter: blur(8px);
 }
 
 .slot:hover:not(:disabled) {
-  border-color: #00f2fe;
-  color: #00f2fe;
-  background: rgba(0, 242, 254, 0.05);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4), var(--glow);
+  border-color: var(--primary-light);
+  color: var(--primary);
+  background: rgba(99, 102, 241, 0.04);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .slot.selected {
-  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-color: transparent;
-  color: #020617;
-  font-weight: 800;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: var(--glow-lg);
+  color: white;
+  font-weight: 700;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .slot:disabled {
-  background: rgba(0, 0, 0, 0.2);
-  color: #334155;
+  background: var(--bg-primary);
+  color: var(--text-muted);
   cursor: not-allowed;
-  border: 1px dashed rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--border);
+  opacity: 0.5;
 }
 
 @media (max-width: 768px) {
-  .selector { margin-bottom: 1.75rem; }
-  .selector h4 { font-size: 0.95rem; margin-bottom: 0.85rem; }
-  .slot-grid { gap: 0.65rem; }
+  .selector {
+    margin-bottom: 1.5rem;
+  }
+
+  .selector h4 {
+    font-size: 0.9rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .selector h4::before {
+    height: 16px;
+  }
+
+  .slot-grid {
+    gap: 0.5rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .slot-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.75rem; }
-  .slot { padding: 0.75rem 0.35rem; font-size: 0.85rem; }
+  .slot-grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .slot {
+    padding: 0.65rem 0.35rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+  }
 }
 
 @media (max-width: 360px) {
-  .slot-grid { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
-  .slot { padding: 0.55rem 0.25rem; font-size: 0.75rem; }
-  .selector h4 { font-size: 0.85rem; }
-  .selector h4::before { width: 4px; height: 16px; }
+  .slot-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+  }
+
+  .slot {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.72rem;
+  }
+
+  .selector h4 {
+    font-size: 0.82rem;
+  }
+
+  .selector h4::before {
+    width: 3px;
+    height: 14px;
+  }
 }
