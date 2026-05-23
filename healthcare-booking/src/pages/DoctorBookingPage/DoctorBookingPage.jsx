@@ -14,15 +14,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import BadgeIcon from '@mui/icons-material/Badge';
+import { doctors } from '../../data/doctors';
 import './DoctorBookingPage.scss';
-
-const doctors = [
-  { id: 1, name: 'Dr. Venkat Reddy', department: 'Cardiology', specialization: 'Heart Specialist', availableSlots: ['09:00', '10:00', '11:30', '14:00'], mode: 'Hybrid', rating: 4.8, reviews: 124, avatar: 'VR' },
-  { id: 2, name: 'Dr. Srinivas Rao', department: 'Neurology', specialization: 'Brain Specialist', availableSlots: ['09:30', '11:00', '13:00', '15:30'], mode: 'Online', rating: 4.9, reviews: 89, avatar: 'SR' },
-  { id: 3, name: 'Dr. Harika Naidu', department: 'Dermatology', specialization: 'Skin Specialist', availableSlots: ['10:00', '12:00', '14:30', '16:00'], mode: 'Offline', rating: 4.7, reviews: 156, avatar: 'HN' },
-  { id: 4, name: 'Dr. Ramana Murthy', department: 'Orthopedics', specialization: 'Bone Specialist', availableSlots: ['08:30', '10:30', '13:30', '15:00'], mode: 'Hybrid', rating: 4.6, reviews: 210, avatar: 'RM' },
-  { id: 5, name: 'Dr. Kavitha Reddy', department: 'Pediatrics', specialization: 'Child Specialist', availableSlots: ['09:00', '11:00', '14:00', '16:30'], mode: 'Online', rating: 4.9, reviews: 312, avatar: 'KR' },
-];
 
 const timeSlots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
 

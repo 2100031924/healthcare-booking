@@ -424,9 +424,6 @@ export default function PatientCheckInPage() {
                   </button>
                 )}
                 <button type="button" className="btn-outline">Update Details</button>
-                <button type="button" className="btn-danger" onClick={handleCancelCheckIn}>
-                  Cancel Check-In
-                </button>
               </div>
             </form>
           </div>
