@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { selectAppointments } from '../../redux';
 import HistoryIcon from '@mui/icons-material/History';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import CloseIcon from '@mui/icons-material/Close';
+import PersonIcon from '@mui/icons-material/Person';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import BadgeIcon from '@mui/icons-material/Badge';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import './BookingHistoryPage.scss';
 
 export default function BookingHistoryPage() {
   const navigate = useNavigate();
-  const { appointments } = useSelector((state) => state.booking);
+  const appointments = useSelector(selectAppointments);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [selectedApt, setSelectedApt] = useState(null);
 
   useEffect(() => {
     let filtered = [...appointments];
@@ -33,16 +45,6 @@ export default function BookingHistoryPage() {
 
     setFilteredAppointments(filtered.reverse());
   }, [appointments, searchQuery, filterStatus]);
-
-  const handleCancelAppointment = (id) => {
-    const updated = appointments.map(apt =>
-      apt.id === id ? { ...apt, status: 'cancelled' } : apt
-    );
-    localStorage.setItem('appointments', JSON.stringify(updated));
-    setFilteredAppointments(prev =>
-      prev.map(apt => apt.id === id ? { ...apt, status: 'cancelled' } : apt)
-    );
-  };
 
   const getStatusBadge = (status) => {
     const s = status?.toLowerCase() || 'pending';
@@ -144,17 +146,12 @@ export default function BookingHistoryPage() {
                   </td>
                   <td>
                     <div className="action-buttons">
-                      <button className="action-btn view" title="View" onClick={() => navigate('/appointment')}>
+                      <button className="action-btn view" title="View" onClick={() => setSelectedApt(apt)}>
                         <VisibilityIcon />
                       </button>
-                      <button className="action-btn edit" title="Reschedule" onClick={() => navigate('/appointment')}>
+                      <button className="action-btn edit" title="Reschedule" onClick={() => navigate('/appointment', { state: { rescheduleAppointment: apt } })}>
                         <EditIcon />
                       </button>
-                      {apt.status?.toLowerCase() !== 'cancelled' && apt.status?.toLowerCase() !== 'completed' && (
-                        <button className="action-btn cancel" title="Cancel" onClick={() => handleCancelAppointment(apt.id)}>
-                          <DeleteIcon />
-                        </button>
-                      )}
                     </div>
                   </td>
                 </tr>
@@ -182,6 +179,123 @@ export default function BookingHistoryPage() {
           <span className="stat-label">Cancelled</span>
         </div>
       </div>
+
+      {/* Patient Details Modal */}
+      {selectedApt && (
+        <div className="modal-overlay" onClick={() => setSelectedApt(null)}>
+          <div className="patient-details-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title-row">
+                <div className="modal-icon">
+                  <PersonIcon />
+                </div>
+                <div>
+                  <h2>Patient Details</h2>
+                  <span className="booking-id-badge">APT-{selectedApt.id}</span>
+                </div>
+              </div>
+              <button className="modal-close" onClick={() => setSelectedApt(null)}>
+                <CloseIcon />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="patient-profile-section">
+                <div className="patient-avatar-lg">
+                  {selectedApt.patientName?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'PT'}
+                </div>
+                <div className="patient-name-block">
+                  <h3>{selectedApt.patientName || 'N/A'}</h3>
+                  <span className={`status-badge ${selectedApt.status?.toLowerCase() || 'pending'}`}>
+                    {selectedApt.status?.charAt(0).toUpperCase() + selectedApt.status?.slice(1) || 'Pending'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="details-grid">
+                <div className="detail-item">
+                  <div className="detail-icon"><LocalHospitalIcon /></div>
+                  <div className="detail-content">
+                    <span className="detail-label">Doctor</span>
+                    <span className="detail-value">{selectedApt.doctorName || 'N/A'}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <div className="detail-icon"><MedicalServicesIcon /></div>
+                  <div className="detail-content">
+                    <span className="detail-label">Department</span>
+                    <span className="detail-value">{selectedApt.department || 'General'}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <div className="detail-icon"><CalendarTodayIcon /></div>
+                  <div className="detail-content">
+                    <span className="detail-label">Appointment Date</span>
+                    <span className="detail-value">{selectedApt.appointmentDate || 'N/A'}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <div className="detail-icon"><AccessTimeIcon /></div>
+                  <div className="detail-content">
+                    <span className="detail-label">Time Slot</span>
+                    <span className="detail-value">{selectedApt.timeSlot || 'N/A'}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <div className="detail-icon">
+                    {selectedApt.consultationMode === 'Online' ? <VideoCallIcon /> : <LocationOnIcon />}
+                  </div>
+                  <div className="detail-content">
+                    <span className="detail-label">Consultation Mode</span>
+                    <span className="detail-value">{selectedApt.consultationMode || 'N/A'}</span>
+                  </div>
+                </div>
+                <div className="detail-item">
+                  <div className="detail-icon"><BadgeIcon /></div>
+                  <div className="detail-content">
+                    <span className="detail-label">Appointment Type</span>
+                    <span className="detail-value">{selectedApt.type === 'video' ? 'Video Consultation' : 'Clinic Visit'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {(selectedApt.contactNumber || selectedApt.email) && (
+                <div className="contact-section">
+                  <h4>Contact Information</h4>
+                  <div className="contact-grid">
+                    {selectedApt.contactNumber && (
+                      <div className="contact-item">
+                        <PhoneIcon />
+                        <span>{selectedApt.contactNumber}</span>
+                      </div>
+                    )}
+                    {selectedApt.email && (
+                      <div className="contact-item">
+                        <EmailIcon />
+                        <span>{selectedApt.email}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {selectedApt.symptoms && (
+                <div className="symptoms-section">
+                  <h4>Symptoms / Notes</h4>
+                  <p>{selectedApt.symptoms}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="modal-footer">
+              <button className="btn-outline" onClick={() => setSelectedApt(null)}>Close</button>
+              <button className="btn-primary" onClick={() => { setSelectedApt(null); navigate('/appointment'); }}>
+                <EditIcon /> Reschedule
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

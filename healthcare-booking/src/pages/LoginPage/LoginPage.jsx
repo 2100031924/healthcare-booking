@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { loginRequest } from '../../store/slices/authSlice';
+import { loginRequest, selectAuthLoading, selectAuthError, selectIsAuthenticated } from '../../redux';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
@@ -22,7 +22,11 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+  const { loading, error, isAuthenticated } = useSelector((state) => ({
+    loading: selectAuthLoading(state),
+    error: selectAuthError(state),
+    isAuthenticated: selectIsAuthenticated(state),
+  }));
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email format').required('Email is required'),

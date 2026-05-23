@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { selectAppointments } from '../../redux';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -10,7 +11,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import './ReportsPage.scss';
 
 export default function ReportsPage() {
-  const { appointments } = useSelector((state) => state.booking);
+  const appointments = useSelector(selectAppointments);
 
   const totalAppointments = appointments.length;
   const completedAppointments = appointments.filter(a => a.status === 'confirmed' || a.status === 'completed').length;

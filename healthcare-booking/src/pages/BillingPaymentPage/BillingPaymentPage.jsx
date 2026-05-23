@@ -46,6 +46,22 @@ export default function BillingPaymentPage() {
   const tax = Math.round((subtotal - discount) * billingData.taxRate);
   const finalAmount = subtotal - discount + tax;
 
+  const numberToWords = (num) => {
+    if (num === 0) return 'Zero';
+    const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const convert = (n) => {
+      if (n < 20) return ones[n];
+      if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? ' ' + ones[n % 10] : '');
+      if (n < 1000) return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' and ' + convert(n % 100) : '');
+      if (n < 100000) return convert(Math.floor(n / 1000)) + ' Thousand' + (n % 1000 ? ' ' + convert(n % 1000) : '');
+      if (n < 10000000) return convert(Math.floor(n / 100000)) + ' Lakh' + (n % 100000 ? ' ' + convert(n % 100000) : '');
+      return convert(Math.floor(n / 10000000)) + ' Crore' + (n % 10000000 ? ' ' + convert(n % 10000000) : '');
+    };
+    return convert(num) + ' Rupees Only';
+  };
+  const amountInWords = numberToWords(finalAmount);
+
   const storedBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
   const invoiceDetails = {
     invoiceNumber: `INV-${Date.now().toString().slice(-6)}`,
@@ -143,6 +159,11 @@ export default function BillingPaymentPage() {
 
   const handlePrint = () => {
     const printContent = invoiceRef.current;
+    if (!printContent) return;
+
+    // Show the invoice template temporarily
+    printContent.style.display = 'block';
+
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -150,6 +171,13 @@ export default function BillingPaymentPage() {
         <head>
           <title>Invoice - ${invoiceDetails.invoiceNumber}</title>
           <link rel="stylesheet" href="/print.css">
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            @media print {
+              body { padding: 0; margin: 0; }
+              .invoice-container { padding: 20px 40px; }
+            }
+          </style>
         </head>
         <body>
           ${printContent.innerHTML}
@@ -157,7 +185,13 @@ export default function BillingPaymentPage() {
       </html>
     `);
     printWindow.document.close();
-    printWindow.print();
+
+    // Wait for fonts to load, then print
+    setTimeout(() => {
+      printWindow.print();
+      // Hide the invoice template again
+      printContent.style.display = 'none';
+    }, 500);
   };
 
   const handleDownload = () => {
@@ -508,22 +542,33 @@ export default function BillingPaymentPage() {
       </div>
 
       {/* Invoice Template for Print/Download */}
-      <div ref={invoiceRef} className="invoice-template">
+      <div ref={invoiceRef} className="invoice-template" style={{ display: 'none' }}>
         <div className="invoice-container">
+          <div className="invoice-top-bar"></div>
+
           <div className="invoice-header">
             <div className="company-info">
-              <h1>CareConnect</h1>
-              <p>Telemedicine Portal</p>
-              <p className="company-address">
-                123 Healthcare Street, Medical City<br />
-                Phone: +91 9876543210 | Email: info@careconnect.com
-              </p>
+              <div className="company-logo-row">
+                <div className="company-logo">
+                  <LocalHospitalIcon style={{ fontSize: '24px' }} />
+                </div>
+                <div>
+                  <div className="company-name">CareConnect</div>
+                  <div className="company-tagline">AI Telemedicine Platform</div>
+                </div>
+              </div>
+              <div className="company-address">
+                123 Healthcare Street, Medical City, Hyderabad - 500001
+              </div>
+              <div className="company-contact">
+                Phone: +91 9876543210 | Email: billing@careconnect.com
+              </div>
             </div>
             <div className="invoice-info">
-              <h2>INVOICE</h2>
-              <p><strong>#{invoiceDetails.invoiceNumber}</strong></p>
-              <p>Date: {invoiceDetails.billingDate}</p>
-              {paymentStatus === 'paid' && <p className="paid-status">PAID</p>}
+              <div className="invoice-badge">Invoice</div>
+              <div className="invoice-number">#{invoiceDetails.invoiceNumber}</div>
+              <div className="invoice-date">Date: {invoiceDetails.billingDate}</div>
+              {paymentStatus === 'paid' && <div className="paid-stamp">Paid</div>}
             </div>
           </div>
 
@@ -542,52 +587,74 @@ export default function BillingPaymentPage() {
             </div>
           </div>
 
-          <table>
+          <table className="invoice-items-table">
             <thead>
               <tr>
+                <th>S.No</th>
                 <th>Description</th>
-                <th className="text-right">Amount (₹)</th>
+                <th>HSN/SAC</th>
+                <th style={{ textAlign: 'right' }}>Amount (₹)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td>1</td>
                 <td>Consultation Charges</td>
-                <td className="text-right">₹{billingData.consultationCharges}</td>
+                <td>9983</td>
+                <td style={{ textAlign: 'right' }}>{billingData.consultationCharges.toFixed(2)}</td>
               </tr>
               <tr>
+                <td>2</td>
                 <td>Medicine Charges</td>
-                <td className="text-right">₹{billingData.medicineCharges}</td>
+                <td>3004</td>
+                <td style={{ textAlign: 'right' }}>{billingData.medicineCharges.toFixed(2)}</td>
               </tr>
               <tr>
+                <td>3</td>
                 <td>Lab Test Charges</td>
-                <td className="text-right">₹{billingData.labTestCharges}</td>
+                <td>9982</td>
+                <td style={{ textAlign: 'right' }}>{billingData.labTestCharges.toFixed(2)}</td>
               </tr>
               <tr>
+                <td>4</td>
                 <td>Additional Charges</td>
-                <td className="text-right">₹{billingData.additionalCharges}</td>
+                <td>9983</td>
+                <td style={{ textAlign: 'right' }}>{billingData.additionalCharges.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
 
-          <div className="totals">
+          <div className="totals-wrapper">
             <table className="totals-table">
-              <tr>
-                <td>Subtotal</td>
-                <td className="text-right">₹{subtotal}</td>
-              </tr>
-              <tr className="discount">
-                <td>Discount Applied</td>
-                <td className="text-right">-₹{discount}</td>
-              </tr>
-              <tr>
-                <td>Tax (GST 5%)</td>
-                <td className="text-right">₹{tax}</td>
-              </tr>
-              <tr className="total">
-                <td><strong>Total Amount</strong></td>
-                <td className="text-right"><strong>₹{finalAmount}</strong></td>
-              </tr>
+              <tbody>
+                <tr className="subtotal-row">
+                  <td>Subtotal</td>
+                  <td>₹{subtotal.toFixed(2)}</td>
+                </tr>
+                <tr className="discount-row">
+                  <td>Discount Applied</td>
+                  <td>-₹{discount.toFixed(2)}</td>
+                </tr>
+                <tr className="tax-row">
+                  <td>CGST (2.5%)</td>
+                  <td>₹{(tax / 2).toFixed(2)}</td>
+                </tr>
+                <tr className="tax-row">
+                  <td>SGST (2.5%)</td>
+                  <td>₹{(tax / 2).toFixed(2)}</td>
+                </tr>
+                <tr className="total-row">
+                  <td>Total Amount</td>
+                  <td>₹{finalAmount.toFixed(2)}</td>
+                </tr>
+              </tbody>
             </table>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <p style={{ fontSize: '13px', color: '#475569' }}>
+              <strong>Amount in Words:</strong> {amountInWords}
+            </p>
           </div>
 
           {paymentStatus === 'paid' && (
@@ -599,9 +666,44 @@ export default function BillingPaymentPage() {
             </div>
           )}
 
-          <div className="footer">
-            <p>Thank you for choosing CareConnect Telemedicine Portal</p>
-            <p className="footer-note">For any queries, please contact us at support@careconnect.com</p>
+          <div className="terms-section">
+            <h4>Terms & Conditions</h4>
+            <p>
+              1. This invoice is computer generated and does not require a physical signature.<br />
+              2. Payment is due within 30 days from the date of invoice.<br />
+              3. Please retain this invoice for your records and insurance claims.<br />
+              4. For any discrepancies, contact us within 7 days of invoice generation.
+            </p>
+          </div>
+
+          <div className="signature-section">
+            <div className="signature-box">
+              <div className="signature-line"></div>
+              <div className="signature-label">Patient Signature</div>
+              <div className="signature-name">{invoiceDetails.patientName}</div>
+            </div>
+            <div className="qr-section">
+              <div className="qr-placeholder">QR Code</div>
+              <div className="qr-text">Scan to verify</div>
+            </div>
+            <div className="signature-box">
+              <div className="signature-line"></div>
+              <div className="signature-label">Authorized Signatory</div>
+              <div className="signature-name">Dr. {invoiceDetails.doctorName}</div>
+              <div className="signature-title">{invoiceDetails.doctorSpecialty}</div>
+            </div>
+          </div>
+
+          <div className="invoice-footer">
+            <div className="footer-thankyou">Thank you for choosing CareConnect!</div>
+            <div className="footer-note">
+              This is a computer-generated invoice. For any queries regarding this bill,<br />
+              please contact our billing department.
+            </div>
+            <div className="footer-contact">
+              Email: billing@careconnect.com | Helpline: +91 9876543210
+            </div>
+            <div className="footer-website">www.careconnect.com</div>
           </div>
         </div>
       </div>

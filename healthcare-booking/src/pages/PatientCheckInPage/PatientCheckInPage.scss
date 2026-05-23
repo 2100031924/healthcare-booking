@@ -3,36 +3,41 @@
   margin: 0 auto;
 
   .page-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-6);
 
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 1rem;
+      gap: var(--space-4);
 
-      h1 { margin: 0; font-size: 1.35rem; font-weight: 800; }
-      p { margin: 0.2rem 0 0; color: var(--text-muted); font-size: 0.82rem; }
+      h1 { margin: 0; font-size: var(--font-size-xl); font-weight: var(--font-weight-extrabold); }
+      p { margin: var(--space-1) 0 0; color: var(--text-muted); font-size: var(--font-size-sm); }
     }
 
     .checkin-progress {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: var(--space-1);
       flex-shrink: 0;
 
       .progress-step {
         display: flex;
         align-items: center;
-        gap: 0.35rem;
-        padding: 0.4rem 0.65rem;
+        gap: var(--space-1);
+        padding: var(--space-2) var(--space-2);
         background: var(--bg-tertiary);
         border: 1px solid var(--border);
-        border-radius: 20px;
+        border-radius: var(--radius-full);
         font-size: 0.72rem;
-        font-weight: 600;
+        font-weight: var(--font-weight-semibold);
         color: var(--text-muted);
         transition: var(--transition);
+        animation: staggerFadeInUp 0.4s ease-out both;
+
+        &:nth-child(1) { animation-delay: 0s; }
+        &:nth-child(3) { animation-delay: 0.1s; }
+        &:nth-child(5) { animation-delay: 0.2s; }
 
         .step-number {
           width: 20px; height: 20px;
@@ -42,15 +47,20 @@
           align-items: center;
           justify-content: center;
           font-size: 0.65rem;
-          font-weight: 700;
+          font-weight: var(--font-weight-bold);
           color: var(--text-muted);
+          transition: var(--transition);
         }
 
         &.completed {
-          background: rgba(16, 185, 129, 0.08);
+          background: rgba(var(--success-rgb), 0.08);
           border-color: var(--success);
           color: var(--success);
-          .step-number { background: var(--success); color: white; }
+          .step-number {
+            background: var(--success);
+            color: white;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
         }
       }
 
@@ -58,6 +68,7 @@
         width: 20px; height: 2px;
         background: var(--border);
         border-radius: 1px;
+        transition: var(--transition);
       }
     }
   }
@@ -65,29 +76,29 @@
   .otp-demo-banner {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    background: rgba(99, 102, 241, 0.06);
-    border: 1px solid rgba(99, 102, 241, 0.15);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: rgba(var(--primary-rgb), 0.06);
+    border: 1px solid rgba(var(--primary-rgb), 0.15);
     border-radius: var(--radius);
     color: var(--primary);
-    font-size: 0.82rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-4);
 
     .banner-icon { font-size: 1.2rem; }
-    strong { margin-left: 0.25rem; }
+    strong { margin-left: var(--space-1); }
   }
 
   .checkin-info-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1.15rem;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-5);
     background: var(--bg-card);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-6);
     box-shadow: var(--shadow-sm);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -95,22 +106,22 @@
     .checkin-info-item {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: var(--space-2);
       white-space: nowrap;
       flex-shrink: 0;
 
       .info-icon { font-size: 1rem; color: var(--primary); }
-      .info-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-      .info-value { font-size: 0.82rem; color: var(--text-primary); font-weight: 700; }
+      .info-label { font-size: var(--font-size-xs); color: var(--text-muted); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); }
+      .info-value { font-size: var(--font-size-sm); color: var(--text-primary); font-weight: var(--font-weight-bold); }
 
       .status-dot {
         width: 8px; height: 8px; border-radius: 50%;
-        &.status-waiting { background: #f59e0b; }
+        &.status-waiting { background: var(--warning); animation: notifPulse 2s ease-in-out infinite; }
         &.status-checked-in { background: var(--success); }
-        &.status-in-consultation { background: var(--primary); }
+        &.status-in-consultation { background: var(--primary); animation: notifPulse 2s ease-in-out infinite; }
         &.status-completed { background: var(--text-muted); }
       }
-      .info-value.status-waiting { color: #f59e0b; }
+      .info-value.status-waiting { color: var(--warning); }
       .info-value.status-checked-in { color: var(--success); }
       .info-value.status-in-consultation { color: var(--primary); }
       .info-value.status-completed { color: var(--text-muted); }
@@ -126,33 +137,33 @@
   .checkin-layout {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    gap: 1.5rem;
+    gap: var(--space-6);
     align-items: start;
   }
 
   .left-panel {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: var(--space-5);
 
     .patient-card {
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
-      padding: 1.5rem;
+      padding: var(--card-padding);
       box-shadow: var(--shadow-sm);
 
       .patient-header {
         display: flex;
         align-items: center;
-        gap: 0.85rem;
-        margin-bottom: 1.15rem;
-        padding-bottom: 1rem;
+        gap: var(--space-3);
+        margin-bottom: var(--space-5);
+        padding-bottom: var(--space-4);
         border-bottom: 1px solid var(--border-light);
 
         .patient-avatar {
           width: 44px; height: 44px;
-          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+          background: var(--gradient-primary);
           border-radius: var(--radius);
           display: flex;
           align-items: center;
@@ -163,20 +174,20 @@
 
         .patient-info {
           flex: 1;
-          h3 { margin: 0; font-size: 1rem; font-weight: 700; }
-          .patient-id { font-size: 0.72rem; color: var(--text-muted); margin: 0.1rem 0 0; }
+          h3 { margin: 0; font-size: var(--font-size-base); font-weight: var(--font-weight-bold); }
+          .patient-id { font-size: 0.72rem; color: var(--text-muted); margin: var(--space-1) 0 0; }
         }
 
         .status-badge {
-          padding: 0.3rem 0.75rem;
-          border-radius: 20px;
+          padding: var(--space-1) var(--space-3);
+          border-radius: var(--radius-full);
           font-size: 0.72rem;
-          font-weight: 700;
+          font-weight: var(--font-weight-bold);
           text-transform: uppercase;
-          letter-spacing: 0.03em;
-          &.status-waiting { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); }
-          &.status-checked-in { background: rgba(16, 185, 129, 0.08); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.15); }
-          &.status-in-consultation { background: rgba(99, 102, 241, 0.08); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.15); }
+          letter-spacing: var(--letter-spacing-wide);
+          &.status-waiting { background: rgba(var(--warning-rgb), 0.1); color: var(--warning); border: 1px solid rgba(var(--warning-rgb), 0.2); }
+          &.status-checked-in { background: rgba(var(--success-rgb), 0.08); color: var(--success); border: 1px solid rgba(var(--success-rgb), 0.15); }
+          &.status-in-consultation { background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border: 1px solid rgba(var(--primary-rgb), 0.15); }
           &.status-completed { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
         }
       }
@@ -184,21 +195,21 @@
       .patient-details-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.65rem;
+        gap: var(--space-2);
 
         .detail-item {
           display: flex;
           align-items: flex-start;
-          gap: 0.6rem;
-          padding: 0.6rem;
+          gap: var(--space-2);
+          padding: var(--space-2);
           background: var(--bg-tertiary);
           border-radius: var(--radius);
           border: 1px solid var(--border);
 
-          svg { font-size: 1rem; color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
+          svg { font-size: 1rem; color: var(--primary); margin-top: var(--space-1); flex-shrink: 0; }
 
-          .label { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.1rem; }
-          .value { display: block; font-size: 0.82rem; color: var(--text-primary); font-weight: 700; }
+          .label { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); margin-bottom: var(--space-1); }
+          .value { display: block; font-size: var(--font-size-sm); color: var(--text-primary); font-weight: var(--font-weight-bold); }
         }
       }
     }
@@ -207,35 +218,54 @@
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
-      padding: 1.5rem;
+      padding: var(--card-padding);
       box-shadow: var(--shadow-sm);
 
-      h2 { margin: 0 0 1rem; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+      h2 { margin: 0 0 var(--space-4); font-size: var(--font-size-base); font-weight: var(--font-weight-bold); display: flex; align-items: center; gap: var(--space-2); }
 
       .queue-display {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        margin-bottom: 1.15rem;
+        gap: var(--space-3);
+        margin-bottom: var(--space-5);
 
         .queue-position, .queue-estimated {
           text-align: center;
-          padding: 1rem;
+          padding: var(--space-4);
           background: var(--bg-tertiary);
           border-radius: var(--radius);
           border: 1px solid var(--border);
+          transition: var(--transition);
 
-          .position-number { display: block; font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
-          .time { display: block; font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
-          .position-label, .label { display: block; font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 0.25rem; }
+          .position-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: var(--font-weight-extrabold);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: var(--line-height-tight);
+            animation: countUp 0.5s ease-out both;
+            animation-delay: 0.2s;
+          }
+          .time {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: var(--font-weight-extrabold);
+            color: var(--primary);
+            line-height: var(--line-height-tight);
+            animation: countUp 0.5s ease-out both;
+            animation-delay: 0.3s;
+          }
+          .position-label, .label { display: block; font-size: var(--font-size-xs); color: var(--text-muted); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); margin-top: var(--space-1); }
         }
       }
 
       .queue-steps {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
-        padding: 0.65rem;
+        gap: var(--space-1);
+        padding: var(--space-2);
         background: var(--bg-tertiary);
         border-radius: var(--radius);
         border: 1px solid var(--border);
@@ -245,20 +275,32 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.25rem;
-          padding: 0.4rem 0.35rem;
+          gap: var(--space-1);
+          padding: var(--space-2) var(--space-1);
           border-radius: var(--radius);
           font-size: 0.68rem;
-          font-weight: 600;
+          font-weight: var(--font-weight-semibold);
           color: var(--text-muted);
           text-align: center;
           white-space: nowrap;
+          transition: var(--transition);
 
           svg { font-size: 0.85rem; }
-          .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+          .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: var(--transition); }
 
-          &.completed { background: rgba(16, 185, 129, 0.08); color: var(--success); svg { color: var(--success); } }
-          &.current { background: rgba(99, 102, 241, 0.08); color: var(--primary); .step-dot { background: var(--primary); } }
+          &.completed {
+            background: rgba(var(--success-rgb), 0.08);
+            color: var(--success);
+            svg { color: var(--success); }
+          }
+          &.current {
+            background: rgba(var(--primary-rgb), 0.08);
+            color: var(--primary);
+            .step-dot {
+              background: var(--primary);
+              animation: notifPulse 2s ease-in-out infinite;
+            }
+          }
         }
       }
     }
@@ -267,7 +309,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
-      padding: 1.5rem;
+      padding: var(--card-padding);
       box-shadow: var(--shadow-sm);
       animation: fadeInUp 0.4s ease-out;
 
@@ -276,15 +318,15 @@
       .token-header {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: var(--space-2);
+        margin-bottom: var(--space-4);
         svg { color: var(--primary); font-size: 1.3rem; }
-        h2 { margin: 0; font-size: 1rem; font-weight: 700; }
+        h2 { margin: 0; font-size: var(--font-size-base); font-weight: var(--font-weight-bold); }
       }
 
       .token-body {
         display: flex;
-        gap: 1rem;
+        gap: var(--space-4);
         align-items: flex-start;
 
         .qr-code {
@@ -295,24 +337,25 @@
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          svg { font-size: 3rem; color: #1e293b; }
+          border: 1px solid var(--border-light);
+          svg { font-size: 3rem; color: var(--text-primary); }
         }
 
         .token-details {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.3rem;
+          gap: var(--space-1);
 
           .token-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.3rem 0;
+            padding: var(--space-1) 0;
             border-bottom: 1px solid var(--border-light);
             font-size: 0.78rem;
-            .label { color: var(--text-muted); font-weight: 500; }
-            .value { color: var(--text-primary); font-weight: 700; }
+            .label { color: var(--text-muted); font-weight: var(--font-weight-medium); }
+            .value { color: var(--text-primary); font-weight: var(--font-weight-bold); }
             &:last-child { border-bottom: none; }
           }
         }
@@ -321,28 +364,28 @@
 
     .no-booking-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-xl);
-      padding: 3rem 2rem;
-      text-align: center;
       border: 2px dashed var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-12) var(--space-8);
+      text-align: center;
 
-      .no-booking-icon { font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; opacity: 0.4; }
-      h3 { margin: 0 0 0.5rem; font-size: 1.15rem; font-weight: 700; }
-      p { margin: 0 0 1.25rem; color: var(--text-muted); font-size: 0.85rem; }
+      .no-booking-icon { font-size: 3rem; color: var(--text-muted); margin-bottom: var(--space-4); opacity: 0.4; }
+      h3 { margin: 0 0 var(--space-2); font-size: 1.15rem; font-weight: var(--font-weight-bold); }
+      p { margin: 0 0 var(--space-5); color: var(--text-muted); font-size: var(--font-size-sm); }
 
       .btn-book {
-        padding: 0.75rem 2rem;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: var(--space-3) var(--space-8);
+        background: var(--gradient-primary);
         color: white;
         border: none;
         border-radius: var(--radius);
-        font-weight: 700;
+        font-weight: var(--font-weight-bold);
         font-size: 0.9rem;
         cursor: pointer;
         transition: var(--transition);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4); }
+        box-shadow: var(--shadow-glow-primary);
+        &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4); }
+        &:active { transform: translateY(0) scale(0.97); }
       }
     }
   }
@@ -352,22 +395,22 @@
       background: var(--bg-card);
       border: 1px solid var(--border-light);
       border-radius: var(--radius-xl);
-      padding: 1.5rem;
+      padding: var(--card-padding);
       box-shadow: var(--shadow-sm);
 
-      h2 { margin: 0 0 1.25rem; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+      h2 { margin: 0 0 var(--space-5); font-size: var(--font-size-base); font-weight: var(--font-weight-bold); display: flex; align-items: center; gap: var(--space-2); }
 
       .checkin-form {
         .form-group {
-          margin-bottom: 1rem;
+          margin-bottom: var(--space-4);
 
           label {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            margin-bottom: 0.4rem;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
             font-size: 0.78rem;
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
             color: var(--text-secondary);
 
             .verified-icon { color: var(--success); font-size: 1rem; }
@@ -375,36 +418,44 @@
 
           input, textarea {
             width: 100%;
-            padding: 0.65rem 0.85rem;
+            padding: var(--space-2) var(--space-3);
             background: var(--bg-tertiary);
             border: 1.5px solid var(--border);
             border-radius: var(--radius);
             color: var(--text-primary);
-            font-size: 0.85rem;
+            font-size: var(--font-size-sm);
             transition: var(--transition);
 
-            &:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+            &:focus {
+              outline: none;
+              border-color: var(--primary);
+              box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+            }
             &::placeholder { color: var(--text-muted); }
-            &.error { border-color: var(--danger); background: var(--danger-bg); &:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1); } }
+            &.error {
+              border-color: var(--danger);
+              background: var(--danger-bg);
+              &:focus { box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.1); }
+            }
           }
 
           textarea { resize: vertical; min-height: 60px; }
 
           .input-with-button {
             display: flex;
-            gap: 0.4rem;
+            gap: var(--space-2);
 
             input { flex: 1; border-radius: var(--radius) 0 0 var(--radius); }
           }
 
           .btn-send-otp, .btn-verify {
-            padding: 0.65rem 1rem;
+            padding: var(--space-2) var(--space-4);
             border: 1.5px solid var(--primary);
             border-radius: 0 var(--radius) var(--radius) 0;
-            background: rgba(99, 102, 241, 0.06);
+            background: rgba(var(--primary-rgb), 0.06);
             color: var(--primary);
             font-size: 0.78rem;
-            font-weight: 700;
+            font-weight: var(--font-weight-bold);
             cursor: pointer;
             transition: var(--transition);
             white-space: nowrap;
@@ -416,9 +467,9 @@
 
           .error-text {
             display: block;
-            margin-top: 0.35rem;
+            margin-top: var(--space-1);
             font-size: 0.72rem;
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
             color: var(--danger);
           }
         }
@@ -426,79 +477,83 @@
         .form-actions {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
-          margin-top: 1.25rem;
+          gap: var(--space-2);
+          margin-top: var(--space-5);
 
           .btn-primary {
             width: 100%;
-            padding: 0.75rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: var(--space-3);
+            background: var(--gradient-primary);
             color: white;
             border: none;
             border-radius: var(--radius);
-            font-weight: 700;
+            font-weight: var(--font-weight-bold);
             font-size: 0.88rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
+            gap: var(--space-2);
             transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: var(--shadow-glow-primary);
             svg { font-size: 1.1rem; }
-            &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4); }
+            &:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4); }
             &:disabled { opacity: 0.5; cursor: not-allowed; }
+            &:active:not(:disabled) { transform: translateY(0) scale(0.97); }
           }
 
           .btn-advance {
-            padding: 0.65rem;
-            background: rgba(16, 185, 129, 0.08);
+            padding: var(--space-2);
+            background: rgba(var(--success-rgb), 0.08);
             color: var(--success);
-            border: 1.5px solid rgba(16, 185, 129, 0.2);
+            border: 1.5px solid rgba(var(--success-rgb), 0.2);
             border-radius: var(--radius);
-            font-weight: 700;
-            font-size: 0.82rem;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.35rem;
+            gap: var(--space-1);
             &:hover { background: var(--success); color: white; border-color: var(--success); }
+            &:active { transform: scale(0.97); }
           }
 
           .btn-outline {
-            padding: 0.65rem;
+            padding: var(--space-2);
             background: transparent;
             color: var(--text-secondary);
             border: 1.5px solid var(--border);
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
             font-size: 0.8rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.3rem;
+            gap: var(--space-1);
             &:hover { border-color: var(--primary); color: var(--primary); }
+            &:active { transform: scale(0.97); }
           }
 
           .btn-danger {
-            padding: 0.65rem;
+            padding: var(--space-2);
             background: transparent;
             color: var(--danger);
             border: 1.5px solid var(--danger);
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
             font-size: 0.8rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.3rem;
+            gap: var(--space-1);
             &:hover { background: var(--danger); color: white; }
+            &:active { transform: scale(0.97); }
           }
         }
       }
@@ -519,11 +574,11 @@
   .patient-checkin-page {
     .page-header .header-content { flex-direction: column; }
     .page-header .checkin-progress { width: 100%; justify-content: center; }
-    .checkin-info-header { gap: 0.5rem; padding: 0.7rem 0.85rem; flex-wrap: nowrap; }
-    .checkin-info-header .checkin-info-item { gap: 0.3rem; }
+    .checkin-info-header { gap: var(--space-2); padding: var(--space-3) var(--space-3); flex-wrap: nowrap; }
+    .checkin-info-header .checkin-info-item { gap: var(--space-1); }
     .checkin-info-header .checkin-info-item .info-label { display: none; }
     .checkin-info-header .checkin-info-divider { height: 20px; }
-    .left-panel .patient-card { padding: 1.15rem; }
+    .left-panel .patient-card { padding: var(--space-5); }
     .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr 1fr; }
     .left-panel .queue-card .queue-steps { flex-wrap: nowrap; overflow-x: auto; }
     .left-panel .queue-card .queue-steps .queue-step { flex-shrink: 0; }
@@ -532,62 +587,62 @@
 
 @media (max-width: 480px) {
   .patient-checkin-page {
-    .page-header { margin-bottom: 1rem; }
+    .page-header { margin-bottom: var(--space-4); }
     .page-header .header-content h1 { font-size: 1.1rem; }
     .page-header .header-content p { font-size: 0.75rem; }
-    .page-header .checkin-progress { gap: 0.2rem; }
-    .page-header .checkin-progress .progress-step { padding: 0.3rem 0.45rem; font-size: 0.65rem; }
+    .page-header .checkin-progress { gap: var(--space-1); }
+    .page-header .checkin-progress .progress-step { padding: var(--space-1) var(--space-2); font-size: 0.65rem; }
     .page-header .checkin-progress .progress-step .step-number { width: 16px; height: 16px; font-size: 0.55rem; }
     .page-header .checkin-progress .progress-line { width: 12px; }
-    .checkin-info-header { padding: 0.55rem 0.65rem; border-radius: var(--radius); }
+    .checkin-info-header { padding: var(--space-2) var(--space-2); border-radius: var(--radius); }
     .checkin-info-header .checkin-info-item .info-icon { font-size: 0.85rem; }
     .checkin-info-header .checkin-info-item .info-value { font-size: 0.75rem; }
-    .checkin-layout { gap: 1rem; }
-    .left-panel { gap: 1rem; }
-    .left-panel .patient-card { padding: 0.85rem; border-radius: var(--radius-lg); }
-    .left-panel .patient-card .patient-header { gap: 0.6rem; }
+    .checkin-layout { gap: var(--space-4); }
+    .left-panel { gap: var(--space-4); }
+    .left-panel .patient-card { padding: var(--space-3); border-radius: var(--radius-lg); }
+    .left-panel .patient-card .patient-header { gap: var(--space-2); }
     .left-panel .patient-card .patient-header .patient-avatar { width: 36px; height: 36px; svg { font-size: 1.1rem; } }
     .left-panel .patient-card .patient-header .patient-info h3 { font-size: 0.88rem; }
-    .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr; gap: 0.45rem; }
-    .left-panel .patient-card .patient-details-grid .detail-item { padding: 0.45rem; }
+    .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr; gap: var(--space-2); }
+    .left-panel .patient-card .patient-details-grid .detail-item { padding: var(--space-2); }
     .left-panel .patient-card .patient-details-grid .detail-item .value { font-size: 0.78rem; }
-    .left-panel .patient-card .patient-header .status-badge { font-size: 0.65rem; padding: 0.2rem 0.55rem; }
-    .left-panel .queue-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .left-panel .patient-card .patient-header .status-badge { font-size: 0.65rem; padding: var(--space-1) var(--space-2); }
+    .left-panel .queue-card { padding: var(--space-4); border-radius: var(--radius-lg); }
     .left-panel .queue-card h2 { font-size: 0.9rem; }
-    .left-panel .queue-card .queue-display { gap: 0.5rem; }
-    .left-panel .queue-card .queue-display .queue-position, .left-panel .queue-card .queue-display .queue-estimated { padding: 0.75rem; }
+    .left-panel .queue-card .queue-display { gap: var(--space-2); }
+    .left-panel .queue-card .queue-display .queue-position, .left-panel .queue-card .queue-display .queue-estimated { padding: var(--space-3); }
     .left-panel .queue-card .queue-display .queue-position .position-number { font-size: 1.5rem; }
     .left-panel .queue-card .queue-display .queue-estimated .time { font-size: 1.2rem; }
-    .left-panel .queue-card .queue-steps { padding: 0.45rem; }
-    .left-panel .queue-card .queue-steps .queue-step { font-size: 0.6rem; padding: 0.3rem 0.25rem; }
-    .left-panel .digital-token-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .left-panel .queue-card .queue-steps { padding: var(--space-2); }
+    .left-panel .queue-card .queue-steps .queue-step { font-size: 0.6rem; padding: var(--space-1) var(--space-1); }
+    .left-panel .digital-token-card { padding: var(--space-4); border-radius: var(--radius-lg); }
     .left-panel .digital-token-card .token-header h2 { font-size: 0.9rem; }
     .left-panel .digital-token-card .token-body { flex-direction: column; align-items: center; }
     .left-panel .digital-token-card .token-body .qr-code { width: 80px; height: 80px; }
     .left-panel .digital-token-card .token-body .token-details .token-row { font-size: 0.72rem; }
-    .right-panel .checkin-form-card { padding: 1rem; border-radius: var(--radius-lg); }
+    .right-panel .checkin-form-card { padding: var(--space-4); border-radius: var(--radius-lg); }
     .right-panel .checkin-form-card h2 { font-size: 0.9rem; }
     .right-panel .checkin-form-card .checkin-form .form-group input,
-    .right-panel .checkin-form-card .checkin-form .form-group textarea { padding: 0.55rem 0.7rem; font-size: 0.8rem; }
+    .right-panel .checkin-form-card .checkin-form .form-group textarea { padding: var(--space-2) var(--space-3); font-size: 0.8rem; }
     .right-panel .checkin-form-card .checkin-form .form-group .btn-send-otp,
-    .right-panel .checkin-form-card .checkin-form .form-group .btn-verify { padding: 0.55rem 0.75rem; font-size: 0.72rem; }
+    .right-panel .checkin-form-card .checkin-form .form-group .btn-verify { padding: var(--space-2) var(--space-3); font-size: 0.72rem; }
     .right-panel .checkin-form-card .checkin-form .form-actions .btn-primary,
     .right-panel .checkin-form-card .checkin-form .form-actions .btn-advance,
     .right-panel .checkin-form-card .checkin-form .form-actions .btn-outline,
-    .right-panel .checkin-form-card .checkin-form .form-actions .btn-danger { font-size: 0.78rem; padding: 0.6rem; }
+    .right-panel .checkin-form-card .checkin-form .form-actions .btn-danger { font-size: 0.78rem; padding: var(--space-2); }
   }
 }
 
 @media (max-width: 360px) {
   .patient-checkin-page {
     .page-header .header-content h1 { font-size: 1rem; }
-    .page-header .checkin-progress .progress-step { padding: 0.25rem 0.35rem; font-size: 0.58rem; }
-    .checkin-info-header .checkin-info-item .info-value { font-size: 0.7rem; }
-    .left-panel .patient-card { padding: 0.7rem; }
+    .page-header .checkin-progress .progress-step { padding: var(--space-1) var(--space-1); font-size: 0.58rem; }
+    .checkin-info-header .checkin-info-item .info-value { font-size: var(--font-size-xs); }
+    .left-panel .patient-card { padding: var(--space-3); }
     .left-panel .patient-card .patient-header .patient-avatar { width: 32px; height: 32px; }
-    .left-panel .patient-card .patient-header .patient-info h3 { font-size: 0.82rem; }
+    .left-panel .patient-card .patient-header .patient-info h3 { font-size: var(--font-size-sm); }
     .left-panel .queue-card .queue-display .queue-position .position-number { font-size: 1.3rem; }
     .left-panel .queue-card .queue-display .queue-estimated .time { font-size: 1rem; }
-    .right-panel .checkin-form-card { padding: 0.85rem; }
+    .right-panel .checkin-form-card { padding: var(--space-3); }
   }
 }

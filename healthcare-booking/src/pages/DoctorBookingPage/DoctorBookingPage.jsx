@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { bookAppointmentRequest } from '../../store/slices/bookingSlice';
+import { bookAppointmentRequest, rescheduleAppointmentRequest, selectAppointments } from '../../redux';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
@@ -38,7 +38,9 @@ export default function DoctorBookingPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { appointments } = useSelector((state) => state.booking);
+  const { appointments } = useSelector((state) => ({
+    appointments: selectAppointments(state),
+  }));
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
@@ -49,6 +51,8 @@ export default function DoctorBookingPage() {
   const searchInputRef = useRef(null);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [rescheduleMode, setRescheduleMode] = useState(false);
+  const [originalAppointmentId, setOriginalAppointmentId] = useState(null);
 
   const storedBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
   const bookingInfo = storedBooking ? {
@@ -72,6 +76,33 @@ export default function DoctorBookingPage() {
       window.history.replaceState({}, document.title);
     } else if (location.state?.focusSearch && searchInputRef.current) {
       searchInputRef.current.focus();
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    if (location.state?.rescheduleAppointment) {
+      const apt = location.state.rescheduleAppointment;
+      const doctor = doctors.find(d => d.name === apt.doctorName);
+      if (doctor) {
+        setSelectedDoctor(doctor);
+      }
+      setSelectedDate(apt.appointmentDate || '');
+      setSelectedSlot(apt.timeSlot || '');
+      setRescheduleMode(true);
+      setOriginalAppointmentId(apt.id);
+      formik.setValues({
+        patientName: apt.patientName || '',
+        contactNumber: apt.contactNumber || (apt.patientName ? apt.patientName.replace(/\D/g, '').substring(0, 10) : ''),
+        email: apt.email || '',
+        doctorId: doctor ? doctor.id.toString() : '',
+        department: apt.department || '',
+        appointmentDate: apt.appointmentDate || '',
+        timeSlot: apt.timeSlot || '',
+        consultationMode: apt.consultationMode || '',
+        appointmentType: apt.appointmentType || 'Regular',
+        symptoms: apt.symptoms || '',
+      });
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -119,16 +150,33 @@ export default function DoctorBookingPage() {
         consultationMode: values.consultationMode,
         appointmentType: values.appointmentType,
         symptoms: values.symptoms,
-        id: Date.now(),
         status: 'confirmed',
       };
-      dispatch(bookAppointmentRequest(bookingData));
-      localStorage.setItem('lastBooking', JSON.stringify(bookingData));
-      setShowConfirmation(true);
-      setTimeout(() => {
-        setShowConfirmation(false);
-        navigate('/checkin');
-      }, 3000);
+
+      if (rescheduleMode && originalAppointmentId) {
+        dispatch(rescheduleAppointmentRequest({
+          id: originalAppointmentId,
+          newDate: values.appointmentDate,
+          newTimeSlot: values.timeSlot,
+          ...bookingData,
+        }));
+        setShowConfirmation(true);
+        setTimeout(() => {
+          setShowConfirmation(false);
+          setRescheduleMode(false);
+          setOriginalAppointmentId(null);
+          navigate('/booking-history');
+        }, 3000);
+      } else {
+        const newBookingData = { ...bookingData, id: Date.now() };
+        dispatch(bookAppointmentRequest(newBookingData));
+        localStorage.setItem('lastBooking', JSON.stringify(newBookingData));
+        setShowConfirmation(true);
+        setTimeout(() => {
+          setShowConfirmation(false);
+          navigate('/checkin');
+        }, 3000);
+      }
     },
   });
 
@@ -204,8 +252,8 @@ export default function DoctorBookingPage() {
       <div className="page-header">
         <div className="header-content">
           <div>
-            <h1>Doctor Booking</h1>
-            <p>Find and book appointments with our expert doctors</p>
+            <h1>{rescheduleMode ? 'Reschedule Appointment' : 'Doctor Booking'}</h1>
+            <p>{rescheduleMode ? 'Update your appointment date and time' : 'Find and book appointments with our expert doctors'}</p>
           </div>
           <div className="header-stats">
             <div className="stat">
@@ -225,12 +273,38 @@ export default function DoctorBookingPage() {
           <div className="success-icon-wrapper">
             <CheckCircleIcon className="success-icon" />
           </div>
-          <h3>Appointment Booked Successfully!</h3>
-          <p>Your appointment has been confirmed. Check your email for details.</p>
+          <h3>{rescheduleMode ? 'Appointment Rescheduled Successfully!' : 'Appointment Booked Successfully!'}</h3>
+          <p>{rescheduleMode ? 'Your appointment has been updated. Check your email for details.' : 'Your appointment has been confirmed. Check your email for details.'}</p>
+          <div className="confirmation-details">
+            <div className="detail-row">
+              <span className="detail-label">Patient</span>
+              <span className="detail-value">{formik.values.patientName}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Doctor</span>
+              <span className="detail-value">{selectedDoctor?.name || 'N/A'}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Date</span>
+              <span className="detail-value">{formik.values.appointmentDate}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Time</span>
+              <span className="detail-value">{formik.values.timeSlot}</span>
+            </div>
+            <div className="detail-row">
+              <span className="detail-label">Mode</span>
+              <span className="detail-value">{formik.values.consultationMode}</span>
+            </div>
+          </div>
+          <div className="redirect-text">
+            <span className="redirect-spinner"></span>
+            {rescheduleMode ? 'Redirecting to booking history...' : 'Redirecting to check-in...'}
+          </div>
         </div>
       )}
 
-      {bookingInfo && (
+      {bookingInfo && !rescheduleMode && (
         <div className="booking-info-header">
           <div className="booking-info-item">
             <PersonIcon className="info-icon" />
@@ -561,8 +635,12 @@ export default function DoctorBookingPage() {
               </div>
 
               <div className="form-actions">
-                <button type="submit" className="btn-primary">
-                  <CheckCircleIcon /> Confirm Booking
+                <button type="submit" className="btn-confirm-booking">
+                  <CheckCircleIcon />
+                  <span>Confirm Booking</span>
+                  <svg className="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
                 </button>
                 <button type="button" className="btn-secondary">Save Draft</button>
                 <button type="button" className="btn-outline">Reschedule</button>

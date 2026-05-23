@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { selectAppointments } from '../../redux';
 import { doctors } from '../../data/doctors';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import TodayIcon from '@mui/icons-material/Today';
@@ -23,7 +24,7 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const [animatedCards, setAnimatedCards] = useState(false);
   
-  const { appointments } = useSelector((state) => state.booking);
+  const appointments = useSelector(selectAppointments);
 
   useEffect(() => {
     setTimeout(() => setAnimatedCards(true), 100);
@@ -213,10 +214,13 @@ export default function DashboardPage() {
                       </td>
                       <td>
                         <div className="action-buttons">
-                          <button className="action-btn view" title="View">
+                          <button className="action-btn view" title="View" onClick={() => navigate('/booking-history')}>
                             <VisibilityIcon />
                           </button>
-                          <button className="action-btn edit" title="Edit">
+                          <button className="action-btn edit" title="Edit" onClick={() => {
+                            const fullApt = appointments.find(a => a.id === apt.id);
+                            if (fullApt) navigate('/appointment', { state: { rescheduleAppointment: fullApt } });
+                          }}>
                             <EditIcon />
                           </button>
                         </div>
@@ -234,13 +238,15 @@ export default function DashboardPage() {
             <h2>Quick Actions</h2>
             <div className="quick-actions">
               {quickActions.map((action, index) => (
-                <button 
-                  className="quick-action-btn" 
+                <button
+                  className="quick-action-btn"
                   key={index}
                   onClick={() => {
                     if (action.label === 'Book Appointment') navigate('/appointment');
                     else if (action.label === 'View Available Slots') navigate('/appointment');
                     else if (action.label === 'Search Doctor') navigate('/appointment', { state: { focusSearch: true } });
+                    else if (action.label === 'Reschedule Appointment') navigate('/booking-history');
+                    else if (action.label === 'Cancel Appointment') navigate('/booking-history');
                   }}
                 >
                   <span className="action-icon">
