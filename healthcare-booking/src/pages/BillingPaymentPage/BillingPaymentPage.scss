@@ -350,6 +350,7 @@
   }
 
   .invoice-template {
+    display: none;
     position: absolute;
     left: -9999px;
     top: 0;
@@ -375,6 +376,21 @@
         .company-address { margin-top: var(--space-2) !important; font-size: 12px; line-height: var(--line-height-relaxed); }
 
         .invoice-info { text-align: right; h2 { font-size: 1.75rem; color: var(--primary); margin: 0; } p { margin: var(--space-1) 0; } .paid-status { color: var(--success); font-weight: var(--font-weight-bold); } }
+      }
+
+      .company-logo-icon { font-size: 24px; }
+
+      .invoice-items-table {
+        .text-right { text-align: right; }
+      }
+
+      .amount-in-words-section {
+        margin-bottom: 16px;
+
+        .amount-in-words-text {
+          font-size: 13px;
+          color: #475569;
+        }
       }
 
       .invoice-meta {

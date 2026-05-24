@@ -542,7 +542,7 @@ export default function BillingPaymentPage() {
       </div>
 
       {/* Invoice Template for Print/Download */}
-      <div ref={invoiceRef} className="invoice-template" style={{ display: 'none' }}>
+      <div ref={invoiceRef} className="invoice-template">
         <div className="invoice-container">
           <div className="invoice-top-bar"></div>
 
@@ -550,7 +550,7 @@ export default function BillingPaymentPage() {
             <div className="company-info">
               <div className="company-logo-row">
                 <div className="company-logo">
-                  <LocalHospitalIcon style={{ fontSize: '24px' }} />
+                  <LocalHospitalIcon className="company-logo-icon" />
                 </div>
                 <div>
                   <div className="company-name">CareConnect</div>
@@ -593,7 +593,7 @@ export default function BillingPaymentPage() {
                 <th>S.No</th>
                 <th>Description</th>
                 <th>HSN/SAC</th>
-                <th style={{ textAlign: 'right' }}>Amount (₹)</th>
+                <th className="text-right">Amount (₹)</th>
               </tr>
             </thead>
             <tbody>
@@ -601,25 +601,25 @@ export default function BillingPaymentPage() {
                 <td>1</td>
                 <td>Consultation Charges</td>
                 <td>9983</td>
-                <td style={{ textAlign: 'right' }}>{billingData.consultationCharges.toFixed(2)}</td>
+                <td className="text-right">{billingData.consultationCharges.toFixed(2)}</td>
               </tr>
               <tr>
                 <td>2</td>
                 <td>Medicine Charges</td>
                 <td>3004</td>
-                <td style={{ textAlign: 'right' }}>{billingData.medicineCharges.toFixed(2)}</td>
+                <td className="text-right">{billingData.medicineCharges.toFixed(2)}</td>
               </tr>
               <tr>
                 <td>3</td>
                 <td>Lab Test Charges</td>
                 <td>9982</td>
-                <td style={{ textAlign: 'right' }}>{billingData.labTestCharges.toFixed(2)}</td>
+                <td className="text-right">{billingData.labTestCharges.toFixed(2)}</td>
               </tr>
               <tr>
                 <td>4</td>
                 <td>Additional Charges</td>
                 <td>9983</td>
-                <td style={{ textAlign: 'right' }}>{billingData.additionalCharges.toFixed(2)}</td>
+                <td className="text-right">{billingData.additionalCharges.toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
@@ -651,8 +651,8 @@ export default function BillingPaymentPage() {
             </table>
           </div>
 
-          <div style={{ marginBottom: '16px' }}>
-            <p style={{ fontSize: '13px', color: '#475569' }}>
+          <div className="amount-in-words-section">
+            <p className="amount-in-words-text">
               <strong>Amount in Words:</strong> {amountInWords}
             </p>
           </div>
