@@ -19,13 +19,39 @@ import EmailIcon from '@mui/icons-material/Email';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import './BookingHistoryPage.scss';
 
+// Merge Redux appointments with localStorage fallback so nothing gets lost
+const getMergedAppointments = (reduxAppointments) => {
+  const byId = new Map();
+  // Add all Redux appointments first
+  for (const apt of reduxAppointments) {
+    byId.set(apt.id, apt);
+  }
+  // Merge in any from localStorage that Redux missed
+  try {
+    const stored = JSON.parse(localStorage.getItem('appointments') || '[]');
+    for (const apt of stored) {
+      if (!byId.has(apt.id)) {
+        byId.set(apt.id, apt);
+      }
+    }
+    // Also check lastBooking (most recent booking)
+    const last = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+    if (last && last.id && !byId.has(last.id)) {
+      byId.set(last.id, { ...last, status: last.status || 'confirmed' });
+    }
+  } catch (e) { /* ignore */ }
+  return Array.from(byId.values());
+};
+
 export default function BookingHistoryPage() {
   const navigate = useNavigate();
-  const appointments = useSelector(selectAppointments);
+  const reduxAppointments = useSelector(selectAppointments);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [selectedApt, setSelectedApt] = useState(null);
+
+  const appointments = getMergedAppointments(reduxAppointments);
 
   useEffect(() => {
     let filtered = [...appointments];
@@ -44,7 +70,7 @@ export default function BookingHistoryPage() {
     }
 
     setFilteredAppointments(filtered.reverse());
-  }, [appointments, searchQuery, filterStatus]);
+  }, [reduxAppointments, searchQuery, filterStatus]);
 
   const getStatusBadge = (status) => {
     const s = status?.toLowerCase() || 'pending';

@@ -24,9 +24,14 @@ function* handleBookAppointment(action) {
   try {
     const appointment = {
       ...action.payload,
-      id: Date.now(),
       status: 'confirmed',
     };
+    // Persist to localStorage immediately
+    try {
+      const existing = JSON.parse(localStorage.getItem('appointments') || '[]');
+      existing.push(appointment);
+      localStorage.setItem('appointments', JSON.stringify(existing));
+    } catch (e) { /* ignore */ }
     yield put(bookAppointmentSuccess(appointment));
   } catch (error) {
     yield put(bookAppointmentFailure(error.message));

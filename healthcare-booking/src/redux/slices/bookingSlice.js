@@ -7,8 +7,29 @@ const initialAppointments = [
   { id: 4, patientName: 'Swathi Naidu', doctorName: 'Dr. Venkat Reddy', timeSlot: '15:30', appointmentDate: '2026-05-21', status: 'cancelled', type: 'clinic', consultationMode: 'Offline' },
 ];
 
+// Load persisted appointments from localStorage (beyond the initial 4)
+const loadPersistedAppointments = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('appointments') || 'null');
+    if (Array.isArray(saved) && saved.length > 0) {
+      return saved;
+    }
+  } catch (e) {
+    // ignore
+  }
+  return initialAppointments;
+};
+
+const persistAppointments = (appointments) => {
+  try {
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+  } catch (e) {
+    // ignore
+  }
+};
+
 const initialState = {
-  appointments: initialAppointments,
+  appointments: loadPersistedAppointments(),
   doctors: [],
   checkIns: [],
   prescriptions: [],

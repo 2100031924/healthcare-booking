@@ -11,14 +11,25 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import './PatientCheckInPage.scss';
 
+const getStoredCheckInState = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('checkInState') || 'null');
+    if (saved && saved.status) {
+      return saved;
+    }
+  } catch (e) {}
+  return null;
+};
+
 export default function PatientCheckInPage() {
   const navigate = useNavigate();
   const storedBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
   const lastAppointment = storedBooking;
-  const [checkInStatus, setCheckInStatus] = useState('waiting');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [showDigitalToken, setShowDigitalToken] = useState(false);
+  const storedCheckIn = getStoredCheckInState();
+  const [checkInStatus, setCheckInStatus] = useState(storedCheckIn?.status || 'waiting');
+  const [otpSent, setOtpSent] = useState(storedCheckIn?.otpSent || false);
+  const [otpVerified, setOtpVerified] = useState(storedCheckIn?.otpVerified || false);
+  const [showDigitalToken, setShowDigitalToken] = useState(storedCheckIn?.showDigitalToken || false);
   const [otpError, setOtpError] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [generatedOtp, setGeneratedOtp] = useState('');
@@ -100,6 +111,16 @@ export default function PatientCheckInPage() {
     },
   });
 
+  // Persist check-in state to localStorage
+  useEffect(() => {
+    localStorage.setItem('checkInState', JSON.stringify({
+      status: checkInStatus,
+      otpSent,
+      otpVerified,
+      showDigitalToken,
+    }));
+  }, [checkInStatus, otpSent, otpVerified, showDigitalToken]);
+
   useEffect(() => {
     if (checkInStatus === 'waiting') {
       const interval = setInterval(() => {
@@ -119,6 +140,7 @@ export default function PatientCheckInPage() {
     setQueuePosition(3);
     setEstimatedWait(20);
     formik.resetForm();
+    localStorage.removeItem('checkInState');
   };
 
   const handleAdvanceStatus = () => {
