@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialAppointments = [
-  { id: 1, patientName: 'Kiran Kumar', doctorName: 'Dr. Venkat Reddy', timeSlot: '10:00 AM', appointmentDate: '2026-05-20', status: 'confirmed', type: 'video', consultationMode: 'Online' },
-  { id: 2, patientName: 'Anusha Chowdhary', doctorName: 'Dr. Srinivas Rao', timeSlot: '11:30 AM', appointmentDate: '2026-05-20', status: 'pending', type: 'clinic', consultationMode: 'Offline' },
-  { id: 3, patientName: 'Vishnu Vardhan', doctorName: 'Dr. Harika Naidu', timeSlot: '14:00', appointmentDate: '2026-05-21', status: 'confirmed', type: 'video', consultationMode: 'Online' },
-  { id: 4, patientName: 'Swathi Naidu', doctorName: 'Dr. Venkat Reddy', timeSlot: '15:30', appointmentDate: '2026-05-21', status: 'cancelled', type: 'clinic', consultationMode: 'Offline' },
+  { id: 1, patientName: 'Kiran Kumar', doctorName: 'Dr. Venkat Reddy', timeSlot: '10:00 AM', appointmentDate: '2026-05-20', status: 'confirmed', type: 'video', consultationMode: 'Online', department: 'Cardiology', contactNumber: '9876543210', email: 'kiran@email.com' },
+  { id: 2, patientName: 'Anusha Chowdhary', doctorName: 'Dr. Srinivas Rao', timeSlot: '11:30 AM', appointmentDate: '2026-05-20', status: 'pending', type: 'clinic', consultationMode: 'Offline', department: 'Neurology', contactNumber: '9876543211', email: 'anusha@email.com' },
+  { id: 3, patientName: 'Vishnu Vardhan', doctorName: 'Dr. Harika Naidu', timeSlot: '14:00', appointmentDate: '2026-05-21', status: 'confirmed', type: 'video', consultationMode: 'Online', department: 'Pediatrics', contactNumber: '9876543212', email: 'vishnu@email.com' },
+  { id: 4, patientName: 'Swathi Naidu', doctorName: 'Dr. Venkat Reddy', timeSlot: '15:30', appointmentDate: '2026-05-21', status: 'cancelled', type: 'clinic', consultationMode: 'Offline', department: 'Cardiology', contactNumber: '9876543213', email: 'swathi@email.com' },
 ];
 
 // Load persisted appointments from localStorage (beyond the initial 4)

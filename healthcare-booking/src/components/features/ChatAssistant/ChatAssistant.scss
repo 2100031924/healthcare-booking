@@ -418,10 +418,30 @@
 }
 
 // ── Responsive ──
+@media (max-width: 768px) {
+  .chat-assistant {
+    bottom: 20px;
+    right: 20px;
+
+    .chat-toggle {
+      width: 56px;
+      height: 56px;
+    }
+
+    .chat-window {
+      right: 20px;
+      bottom: 88px;
+      width: calc(100vw - 40px);
+      max-height: 65dvh;
+      border-radius: 16px;
+    }
+  }
+}
+
 @media (max-width: 480px) {
   .chat-assistant {
-    bottom: 16px;
-    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
 
     .chat-toggle {
       width: 52px;
@@ -429,10 +449,27 @@
     }
 
     .chat-window {
-      right: 16px;
-      bottom: 76px;
-      width: calc(100vw - 32px);
+      right: 8px;
+      bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+      width: calc(100vw - 16px);
       max-height: 70dvh;
+      border-radius: 14px;
     }
+  }
+}
+
+// Touch device: disable hover effects
+@media (hover: none) and (pointer: coarse) {
+  .chat-assistant .chat-toggle:hover {
+    transform: none;
+  }
+
+  .chat-assistant .chat-toggle:active {
+    transform: scale(0.92);
+  }
+
+  .chat-assistant .quick-actions .quick-btn:hover {
+    transform: none;
+    box-shadow: none;
   }
 }

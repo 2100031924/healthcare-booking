@@ -1,6 +1,8 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
+import { selectAppointments } from '../../redux';
 import PersonIcon from '@mui/icons-material/Person';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
@@ -11,6 +13,8 @@ import MedicationIcon from '@mui/icons-material/Medication';
 import NoteIcon from '@mui/icons-material/Note';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
+import SearchIcon from '@mui/icons-material/Search';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './GeneratePrescriptionPage.scss';
@@ -20,7 +24,29 @@ const medicineSuggestions = [
   'Omeprazole 20mg', 'Metformin 500mg', 'Amlodipine 5mg', 'Atorvastatin 10mg',
 ];
 
+const getMergedAppointments = (reduxAppointments) => {
+  const byId = new Map();
+  for (const apt of reduxAppointments) {
+    byId.set(apt.id, apt);
+  }
+  try {
+    const stored = JSON.parse(localStorage.getItem('appointments') || '[]');
+    for (const apt of stored) {
+      if (!byId.has(apt.id)) byId.set(apt.id, apt);
+    }
+    const last = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+    if (last && last.id && !byId.has(last.id)) {
+      byId.set(last.id, { ...last, status: last.status || 'confirmed' });
+    }
+  } catch (e) {}
+  return Array.from(byId.values());
+};
+
 export default function GeneratePrescriptionPage() {
+  const reduxAppointments = useSelector(selectAppointments);
+  const allPatients = getMergedAppointments(reduxAppointments);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [patientSearch, setPatientSearch] = useState('');
   const [medicineList, setMedicineList] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [prescriptionGenerated, setPrescriptionGenerated] = useState(false);
@@ -31,13 +57,29 @@ export default function GeneratePrescriptionPage() {
   const prescriptionRef = useRef(null);
   const canvasRef = useRef(null);
 
-  const storedBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
-  const patientInfo = storedBooking ? {
-    name: storedBooking.patientName || 'N/A',
-    appointmentId: `APT-${storedBooking.id}`,
-    doctor: storedBooking.doctorName || 'N/A',
-    consultationDate: storedBooking.appointmentDate || 'N/A',
-    symptoms: storedBooking.symptoms || 'Not specified',
+  // Auto-select first patient if none selected
+  useEffect(() => {
+    if (!selectedPatientId && allPatients.length > 0) {
+      const last = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+      const defaultId = last?.id || allPatients[0].id;
+      setSelectedPatientId(defaultId);
+    }
+  }, [allPatients, selectedPatientId]);
+
+  const selectedApt = allPatients.find(a => a.id === selectedPatientId) || allPatients[0];
+
+  const filteredPatients = allPatients.filter(apt =>
+    apt.patientName?.toLowerCase().includes(patientSearch.toLowerCase()) ||
+    apt.doctorName?.toLowerCase().includes(patientSearch.toLowerCase()) ||
+    (apt.appointmentId || `APT-${apt.id}`).toLowerCase().includes(patientSearch.toLowerCase())
+  );
+
+  const patientInfo = selectedApt ? {
+    name: selectedApt.patientName || 'N/A',
+    appointmentId: selectedApt.appointmentId || `APT-${selectedApt.id}`,
+    doctor: selectedApt.doctorName || 'N/A',
+    consultationDate: selectedApt.appointmentDate || 'N/A',
+    symptoms: selectedApt.symptoms || 'Not specified',
     diagnosis: 'Pending evaluation',
     allergies: 'None reported',
     previousHistory: 'No prior records',
@@ -215,6 +257,42 @@ export default function GeneratePrescriptionPage() {
           <p>Prescription has been shared with patient.</p>
         </div>
       )}
+
+      {/* Patient Selector */}
+      <div className="patient-selector-bar">
+        <div className="selector-header">
+          <HowToRegIcon />
+          <span>Select Patient ({allPatients.length} total)</span>
+        </div>
+        <div className="selector-search">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search patients..."
+            value={patientSearch}
+            onChange={(e) => setPatientSearch(e.target.value)}
+          />
+        </div>
+        <div className="patient-chips">
+          {filteredPatients.map((apt) => (
+            <button
+              key={apt.id}
+              className={`patient-chip ${selectedPatientId === apt.id ? 'active' : ''} ${apt.status || ''}`}
+              onClick={() => {
+                setSelectedPatientId(apt.id);
+                setMedicineList([]);
+                setPrescriptionGenerated(false);
+              }}
+            >
+              <span className="chip-name">{apt.patientName}</span>
+              <span className="chip-id">{apt.appointmentId || `APT-${apt.id}`}</span>
+            </button>
+          ))}
+          {filteredPatients.length === 0 && (
+            <span className="no-patients">No patients found</span>
+          )}
+        </div>
+      </div>
 
       <div className="prescription-info-header">
         <div className="prescription-info-item">

@@ -34,6 +34,28 @@
     padding: var(--page-padding, 2rem);
     min-height: 60vh;
   }
+
+  @media (max-width: 768px) {
+    .chat-assistant .chat-window {
+      height: 500px;
+    }
+
+    .chat-wrapper {
+      padding: var(--space-4);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .chat-assistant .chat-window {
+      height: 450px;
+      border-radius: var(--radius-lg, 12px);
+    }
+
+    .chat-wrapper {
+      padding: var(--space-3);
+      min-height: 50vh;
+    }
+  }
 }
 
 @keyframes fadeInUp {

@@ -143,7 +143,7 @@ export default function BookingHistoryPage() {
             <tbody>
               {filteredAppointments.map((apt) => (
                 <tr key={apt.id}>
-                  <td className="booking-id">APT-{apt.id}</td>
+                  <td className="booking-id">{apt.appointmentId || `APT-${apt.id}`}</td>
                   <td>
                     <div className="patient-cell">
                       <div className="patient-avatar">
@@ -217,7 +217,7 @@ export default function BookingHistoryPage() {
                 </div>
                 <div>
                   <h2>Patient Details</h2>
-                  <span className="booking-id-badge">APT-{selectedApt.id}</span>
+                  <span className="booking-id-badge">{selectedApt.appointmentId || `APT-${selectedApt.id}`}</span>
                 </div>
               </div>
               <button className="modal-close" onClick={() => setSelectedApt(null)}>

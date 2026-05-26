@@ -6,14 +6,18 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdate';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import './NotificationsPage.scss';
 
 const initialNotifications = [
-  { id: 1, type: 'booking', title: 'New Appointment Booked', message: 'John Doe booked an appointment with Dr. Venkat Reddy', time: '2 mins ago', read: false, icon: <EventAvailableIcon /> },
-  { id: 2, type: 'payment', title: 'Payment Received', message: 'Payment of ₹1,050 received from Jane Smith', time: '1 hour ago', read: false, icon: <ReceiptIcon /> },
-  { id: 3, type: 'prescription', title: 'Prescription Generated', message: 'Dr. Priya Patel generated a new prescription', time: '3 hours ago', read: false, icon: <DescriptionIcon /> },
-  { id: 4, type: 'checkin', title: 'Patient Checked In', message: 'Rahul Sharma checked in for appointment APT-2026-001', time: '5 hours ago', read: true, icon: <PersonAddIcon /> },
-  { id: 5, type: 'system', title: 'System Update', message: 'Scheduled maintenance on May 25, 2026 at midnight', time: '1 day ago', read: true, icon: <SystemUpdateIcon /> },
+  { id: 1, type: 'booking', title: 'New Appointment Booked', message: 'John Doe booked an appointment with Dr. Venkat Reddy', time: '2 mins ago', read: false, icon: <EventAvailableIcon />, category: 'Appointment' },
+  { id: 2, type: 'payment', title: 'Payment Received', message: 'Payment of ₹1,050 received from Jane Smith', time: '1 hour ago', read: false, icon: <ReceiptIcon />, category: 'Billing' },
+  { id: 3, type: 'prescription', title: 'Prescription Generated', message: 'Dr. Priya Patel generated a new prescription', time: '3 hours ago', read: false, icon: <DescriptionIcon />, category: 'Prescription' },
+  { id: 4, type: 'checkin', title: 'Patient Checked In', message: 'Rahul Sharma checked in for appointment APT-2026-001', time: '5 hours ago', read: true, icon: <PersonAddIcon />, category: 'Check-In' },
+  { id: 5, type: 'system', title: 'System Update', message: 'Scheduled maintenance on May 25, 2026 at midnight', time: '1 day ago', read: true, icon: <SystemUpdateIcon />, category: 'System' },
 ];
 
 export default function NotificationsPage() {
@@ -49,68 +53,117 @@ export default function NotificationsPage() {
     else if (notification.type === 'checkin') navigate('/checkin');
   };
 
+  const getIconBg = (type) => {
+    const map = {
+      booking: 'icon-blue',
+      payment: 'icon-green',
+      prescription: 'icon-purple',
+      checkin: 'icon-amber',
+      system: 'icon-slate',
+    };
+    return map[type] || 'icon-blue';
+  };
+
   return (
     <div className="notifications-page">
+      {/* Header */}
       <div className="page-header">
-        <div className="page-title-row">
-          <div className="page-icon-wrapper">
+        <div className="header-left">
+          <div className="header-icon-wrap">
             <NotificationsIcon />
-            {unreadCount > 0 && <span className="unread-badge">{unreadCount}</span>}
+            {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
           </div>
-          <div>
+          <div className="header-text">
             <h1>Notifications</h1>
             <p>Stay updated with your healthcare activities</p>
           </div>
         </div>
-        <div className="header-actions">
-          <button className="btn-outline" onClick={markAllAsRead} disabled={unreadCount === 0}>
-            Mark All Read
-          </button>
+        <div className="header-right">
+          {unreadCount > 0 && (
+            <button className="btn-mark-all" onClick={markAllAsRead}>
+              <DoneAllIcon />
+              <span>Mark All Read</span>
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="filter-tabs">
-        <button className={`tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
-          All ({notifications.length})
-        </button>
-        <button className={`tab ${filter === 'unread' ? 'active' : ''}`} onClick={() => setFilter('unread')}>
-          Unread ({unreadCount})
-        </button>
+      {/* Filter Tabs */}
+      <div className="filter-bar">
+        <div className="filter-tabs">
+          <button
+            className={`tab ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All
+            <span className="tab-count">{notifications.length}</span>
+          </button>
+          <button
+            className={`tab ${filter === 'unread' ? 'active' : ''}`}
+            onClick={() => setFilter('unread')}
+          >
+            Unread
+            {unreadCount > 0 && <span className="tab-count">{unreadCount}</span>}
+          </button>
+        </div>
+        <div className="filter-meta">
+          <FilterListIcon />
+          <span>{filteredNotifications.length} notification{filteredNotifications.length !== 1 ? 's' : ''}</span>
+        </div>
       </div>
 
+      {/* Notifications List */}
       <div className="notifications-list">
         {filteredNotifications.length === 0 ? (
           <div className="empty-state">
-            <NotificationsIcon className="empty-icon" />
-            <h3>No Notifications</h3>
-            <p>You're all caught up!</p>
+            <div className="empty-icon-wrap">
+              <CheckCircleIcon />
+            </div>
+            <h3>All Caught Up</h3>
+            <p>No notifications to display right now.</p>
           </div>
         ) : (
-          filteredNotifications.map((notification) => (
+          filteredNotifications.map((notification, index) => (
             <div
               key={notification.id}
               className={`notification-card ${!notification.read ? 'unread' : ''}`}
               onClick={() => handleNotificationClick(notification)}
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <div className="notification-icon">
+              {/* Icon */}
+              <div className={`notif-icon ${getIconBg(notification.type)}`}>
                 {notification.icon}
               </div>
-              <div className="notification-content">
-                <div className="notification-header">
-                  <h3>{notification.title}</h3>
-                  <span className="notification-time">{notification.time}</span>
+
+              {/* Content */}
+              <div className="notif-body">
+                <div className="notif-top">
+                  <div className="notif-title-group">
+                    <h3>{notification.title}</h3>
+                    <span className="notif-category">{notification.category}</span>
+                  </div>
+                  <span className="notif-time">{notification.time}</span>
                 </div>
-                <p>{notification.message}</p>
-                <div className="notification-actions">
-                  {!notification.read && <span className="unread-dot">New</span>}
+                <p className="notif-message">{notification.message}</p>
+                <div className="notif-footer">
+                  {!notification.read && (
+                    <span className="new-badge">
+                      <span className="new-dot"></span>
+                      New
+                    </span>
+                  )}
                   <button
-                    className="delete-btn"
+                    className="btn-dismiss"
                     onClick={(e) => { e.stopPropagation(); deleteNotification(notification.id); }}
                   >
-                    Dismiss
+                    <DeleteIcon />
+                    <span>Dismiss</span>
                   </button>
                 </div>
               </div>
+
+              {/* Unread indicator line */}
+              {!notification.read && <div className="unread-line"></div>}
             </div>
           ))
         )}

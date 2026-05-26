@@ -42,6 +42,7 @@ export default function DoctorBookingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredDoctors, setFilteredDoctors] = useState(doctors);
   const searchInputRef = useRef(null);
+  const lastBookingRef = useRef(null);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [rescheduleMode, setRescheduleMode] = useState(false);
@@ -51,9 +52,11 @@ export default function DoctorBookingPage() {
   const bookingInfo = storedBooking ? {
     patientName: storedBooking.patientName,
     bookingId: `BK-${storedBooking.id}`,
+    appointmentId: storedBooking.appointmentId || `APT-${storedBooking.id}`,
     department: storedBooking.department,
     selectedDoctor: storedBooking.doctorName,
     appointmentStatus: storedBooking.status || 'confirmed',
+    appointmentId: storedBooking.appointmentId || `APT-${storedBooking.id}`,
   } : null;
 
   const bookedSlots = appointments
@@ -161,9 +164,11 @@ export default function DoctorBookingPage() {
           navigate('/booking-history');
         }, 3000);
       } else {
-        const newBookingData = { ...bookingData, id: Date.now() };
+        const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+        const newBookingData = { ...bookingData, id: Math.floor(Math.random() * 1000000000000000), appointmentId: `APT-${randomSuffix}` };
         dispatch(bookAppointmentRequest(newBookingData));
         localStorage.setItem('lastBooking', JSON.stringify(newBookingData));
+        lastBookingRef.current = newBookingData;
         setShowConfirmation(true);
         setTimeout(() => {
           setShowConfirmation(false);
@@ -270,6 +275,10 @@ export default function DoctorBookingPage() {
           <p>{rescheduleMode ? 'Your appointment has been updated. Check your email for details.' : 'Your appointment has been confirmed. Check your email for details.'}</p>
           <div className="confirmation-details">
             <div className="detail-row">
+              <span className="detail-label">Booking ID</span>
+              <span className="detail-value">{lastBookingRef.current?.appointmentId || bookingInfo?.appointmentId || 'N/A'}</span>
+            </div>
+            <div className="detail-row">
               <span className="detail-label">Patient</span>
               <span className="detail-value">{formik.values.patientName}</span>
             </div>
@@ -308,7 +317,7 @@ export default function DoctorBookingPage() {
           <div className="booking-info-item">
             <BadgeIcon className="info-icon" />
             <span className="info-label">Booking ID</span>
-            <span className="info-value">{bookingInfo.bookingId}</span>
+            <span className="info-value">{bookingInfo.appointmentId || bookingInfo.bookingId}</span>
           </div>
           <div className="booking-info-divider"></div>
           <div className="booking-info-item">

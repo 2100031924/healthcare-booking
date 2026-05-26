@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
+import { selectAppointments } from '../../redux';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import PaymentIcon from '@mui/icons-material/Payment';
 import PrintIcon from '@mui/icons-material/Print';
@@ -14,9 +16,33 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import SecurityIcon from '@mui/icons-material/Security';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import SearchIcon from '@mui/icons-material/Search';
 import './BillingPaymentPage.scss';
 
+const getMergedAppointments = (reduxAppointments) => {
+  const byId = new Map();
+  for (const apt of reduxAppointments) {
+    byId.set(apt.id, apt);
+  }
+  try {
+    const stored = JSON.parse(localStorage.getItem('appointments') || '[]');
+    for (const apt of stored) {
+      if (!byId.has(apt.id)) byId.set(apt.id, apt);
+    }
+    const last = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+    if (last && last.id && !byId.has(last.id)) {
+      byId.set(last.id, { ...last, status: last.status || 'confirmed' });
+    }
+  } catch (e) {}
+  return Array.from(byId.values());
+};
+
 export default function BillingPaymentPage() {
+  const reduxAppointments = useSelector(selectAppointments);
+  const allPatients = getMergedAppointments(reduxAppointments);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [patientSearch, setPatientSearch] = useState('');
   const [paymentStatus, setPaymentStatus] = useState('pending');
   const [showReceipt, setShowReceipt] = useState(false);
   const [invoiceGenerated, setInvoiceGenerated] = useState(false);
@@ -31,6 +57,23 @@ export default function BillingPaymentPage() {
   });
   const [cardErrors, setCardErrors] = useState({});
   const invoiceRef = useRef(null);
+
+  // Auto-select first patient
+  useEffect(() => {
+    if (!selectedPatientId && allPatients.length > 0) {
+      const last = JSON.parse(localStorage.getItem('lastBooking') || 'null');
+      const defaultId = last?.id || allPatients[0].id;
+      setSelectedPatientId(defaultId);
+    }
+  }, [allPatients, selectedPatientId]);
+
+  const selectedApt = allPatients.find(a => a.id === selectedPatientId) || allPatients[0];
+
+  const filteredPatients = allPatients.filter(apt =>
+    apt.patientName?.toLowerCase().includes(patientSearch.toLowerCase()) ||
+    apt.doctorName?.toLowerCase().includes(patientSearch.toLowerCase()) ||
+    (apt.appointmentId || `APT-${apt.id}`).toLowerCase().includes(patientSearch.toLowerCase())
+  );
 
   const [billingData, setBillingData] = useState({
     consultationCharges: 500,
@@ -62,16 +105,15 @@ export default function BillingPaymentPage() {
   };
   const amountInWords = numberToWords(finalAmount);
 
-  const storedBooking = JSON.parse(localStorage.getItem('lastBooking') || 'null');
   const invoiceDetails = {
     invoiceNumber: `INV-${Date.now().toString().slice(-6)}`,
-    appointmentId: storedBooking ? `APT-${storedBooking.id}` : 'APT-2026-001',
-    doctorName: storedBooking?.doctorName || 'Dr. Priya Patel',
-    doctorSpecialty: storedBooking?.department || 'General Physician',
+    appointmentId: selectedApt?.appointmentId || (selectedApt ? `APT-${selectedApt.id}` : 'APT-2026-001'),
+    doctorName: selectedApt?.doctorName || 'Dr. Priya Patel',
+    doctorSpecialty: selectedApt?.department || 'General Physician',
     billingDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-    patientName: storedBooking?.patientName || 'Rahul Sharma',
-    patientPhone: storedBooking?.contactNumber || '+91 9876543210',
-    patientEmail: storedBooking?.email || 'rahul.sharma@email.com',
+    patientName: selectedApt?.patientName || 'Rahul Sharma',
+    patientPhone: selectedApt?.contactNumber || '+91 9876543210',
+    patientEmail: selectedApt?.email || 'rahul.sharma@email.com',
     transactionId: 'TXN-2026-XYZ123',
     paymentMode: 'Cash',
   };
@@ -264,6 +306,44 @@ export default function BillingPaymentPage() {
           <p>Payment has been cancelled successfully.</p>
         </div>
       )}
+
+      {/* Patient Selector */}
+      <div className="patient-selector-bar">
+        <div className="selector-header">
+          <HowToRegIcon />
+          <span>Select Patient ({allPatients.length} total)</span>
+        </div>
+        <div className="selector-search">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search patients..."
+            value={patientSearch}
+            onChange={(e) => setPatientSearch(e.target.value)}
+          />
+        </div>
+        <div className="patient-chips">
+          {filteredPatients.map((apt) => (
+            <button
+              key={apt.id}
+              className={`patient-chip ${selectedPatientId === apt.id ? 'active' : ''} ${apt.status || ''}`}
+              onClick={() => {
+                setSelectedPatientId(apt.id);
+                setPaymentStatus('pending');
+                setShowReceipt(false);
+                setInvoiceGenerated(false);
+                setPaymentCancelled(false);
+              }}
+            >
+              <span className="chip-name">{apt.patientName}</span>
+              <span className="chip-id">{apt.appointmentId || `APT-${apt.id}`}</span>
+            </button>
+          ))}
+          {filteredPatients.length === 0 && (
+            <span className="no-patients">No patients found</span>
+          )}
+        </div>
+      </div>
 
       <div className="billing-layout">
         <div className="billing-main">

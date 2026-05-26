@@ -134,6 +134,81 @@
     }
   }
 
+  .checkin-summary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-5);
+    box-shadow: var(--shadow-sm);
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      .summary-icon {
+        font-size: 1.3rem;
+        &.total { color: var(--primary); }
+        &.checked-in { color: var(--success); }
+        &.waiting { color: var(--warning); }
+      }
+
+      .summary-label {
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: var(--letter-spacing-wide);
+      }
+
+      .summary-value {
+        font-size: 1.2rem;
+        font-weight: var(--font-weight-extrabold);
+        color: var(--text-primary);
+        min-width: 24px;
+        text-align: center;
+      }
+    }
+
+    .summary-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+    }
+  }
+
+  .no-booking-card {
+    background: var(--bg-card);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-12) var(--space-8);
+    text-align: center;
+
+    .no-booking-icon { font-size: 3rem; color: var(--text-muted); margin-bottom: var(--space-4); opacity: 0.4; }
+    h3 { margin: 0 0 var(--space-2); font-size: 1.15rem; font-weight: var(--font-weight-bold); }
+    p { margin: 0 0 var(--space-5); color: var(--text-muted); font-size: var(--font-size-sm); }
+
+    .btn-book {
+      padding: var(--space-3) var(--space-8);
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: var(--font-weight-bold);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-glow-primary);
+      &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4); }
+      &:active { transform: translateY(0) scale(0.97); }
+    }
+  }
+
   .checkin-layout {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -145,6 +220,125 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
+
+    .patient-list-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+
+      .patient-list-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-3) var(--space-4);
+        border-bottom: 1px solid var(--border-light);
+        background: var(--bg-tertiary);
+
+        svg { color: var(--primary); font-size: 1.2rem; }
+        h3 { margin: 0; font-size: var(--font-size-sm); font-weight: var(--font-weight-bold); }
+      }
+
+      .patient-list-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .patient-list-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--font-size-sm);
+
+        thead {
+          background: var(--bg-tertiary);
+          th {
+            padding: var(--space-2) var(--space-3);
+            text-align: left;
+            font-size: 0.65rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing-wide);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+          }
+        }
+
+        tbody {
+          tr {
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--border-light);
+
+            &:hover { background: rgba(var(--primary-rgb), 0.03); }
+            &:last-child { border-bottom: none; }
+
+            &.selected {
+              background: rgba(var(--primary-rgb), 0.06);
+              box-shadow: inset 3px 0 0 var(--primary);
+            }
+
+            td {
+              padding: var(--space-2) var(--space-3);
+              vertical-align: middle;
+              color: var(--text-primary);
+              font-weight: var(--font-weight-medium);
+              white-space: nowrap;
+
+              .patient-cell {
+                display: flex;
+                align-items: center;
+                gap: var(--space-2);
+
+                .patient-avatar-sm {
+                  width: 28px; height: 28px;
+                  background: var(--gradient-primary);
+                  border-radius: var(--radius);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: white;
+                  flex-shrink: 0;
+                  svg { font-size: 0.85rem; }
+                }
+
+                .patient-name {
+                  font-weight: var(--font-weight-bold);
+                  color: var(--text-primary);
+                }
+              }
+
+              .status-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: var(--space-1);
+                padding: var(--space-1) var(--space-2);
+                border-radius: var(--radius-full);
+                font-size: 0.65rem;
+                font-weight: var(--font-weight-bold);
+                text-transform: uppercase;
+                letter-spacing: var(--letter-spacing-wide);
+                white-space: nowrap;
+
+                &.status-waiting { background: rgba(var(--warning-rgb), 0.1); color: var(--warning); border: 1px solid rgba(var(--warning-rgb), 0.2); }
+                &.status-checked-in { background: rgba(var(--success-rgb), 0.08); color: var(--success); border: 1px solid rgba(var(--success-rgb), 0.15); }
+                &.status-in-consultation { background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border: 1px solid rgba(var(--primary-rgb), 0.15); }
+                &.status-completed { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
+
+                .status-dot {
+                  width: 6px; height: 6px; border-radius: 50%; display: inline-block;
+                  &.status-waiting { background: var(--warning); }
+                  &.status-checked-in { background: var(--success); }
+                  &.status-in-consultation { background: var(--primary); }
+                  &.status-completed { background: var(--text-muted); }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 
     .patient-card {
       background: var(--bg-card);
@@ -261,6 +455,78 @@
         }
       }
 
+      .queue-list {
+        margin-bottom: var(--space-3);
+        background: var(--bg-tertiary);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+
+        h4 {
+          margin: 0;
+          padding: var(--space-2) var(--space-3);
+          font-size: 0.68rem;
+          font-weight: var(--font-weight-bold);
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: var(--letter-spacing-wide);
+          border-bottom: 1px solid var(--border);
+          background: var(--bg-card);
+        }
+
+        .queue-list-item {
+          display: flex;
+          align-items: center;
+          gap: var(--space-2);
+          padding: var(--space-2) var(--space-3);
+          border-bottom: 1px solid var(--border-light);
+          cursor: pointer;
+          transition: var(--transition);
+          font-size: 0.75rem;
+
+          &:last-child { border-bottom: none; }
+          &:hover { background: rgba(var(--primary-rgb), 0.03); }
+
+          &.current {
+            background: rgba(var(--primary-rgb), 0.06);
+            font-weight: var(--font-weight-bold);
+          }
+
+          .queue-idx {
+            width: 24px;
+            font-weight: var(--font-weight-bold);
+            color: var(--text-muted);
+            font-size: 0.68rem;
+          }
+
+          .status-dot {
+            width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+            &.status-waiting { background: var(--warning); }
+            &.status-checked-in { background: var(--success); }
+            &.status-in-consultation { background: var(--primary); }
+            &.status-completed { background: var(--text-muted); }
+          }
+
+          .queue-name {
+            flex: 1;
+            color: var(--text-primary);
+          }
+
+          .queue-status-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing-wide);
+          }
+
+          &.status-waiting .queue-status-label { color: var(--warning); }
+          &.status-checked-in .queue-status-label { color: var(--success); }
+          &.status-in-consultation .queue-status-label { color: var(--primary); }
+          &.status-completed .queue-status-label { color: var(--text-muted); }
+        }
+      }
+
       .queue-steps {
         display: flex;
         align-items: center;
@@ -362,32 +628,6 @@
       }
     }
 
-    .no-booking-card {
-      background: var(--bg-card);
-      border: 2px dashed var(--border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-12) var(--space-8);
-      text-align: center;
-
-      .no-booking-icon { font-size: 3rem; color: var(--text-muted); margin-bottom: var(--space-4); opacity: 0.4; }
-      h3 { margin: 0 0 var(--space-2); font-size: 1.15rem; font-weight: var(--font-weight-bold); }
-      p { margin: 0 0 var(--space-5); color: var(--text-muted); font-size: var(--font-size-sm); }
-
-      .btn-book {
-        padding: var(--space-3) var(--space-8);
-        background: var(--gradient-primary);
-        color: white;
-        border: none;
-        border-radius: var(--radius);
-        font-weight: var(--font-weight-bold);
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: var(--transition);
-        box-shadow: var(--shadow-glow-primary);
-        &:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.4); }
-        &:active { transform: translateY(0) scale(0.97); }
-      }
-    }
   }
 
   .right-panel {
@@ -399,6 +639,38 @@
       box-shadow: var(--shadow-sm);
 
       h2 { margin: 0 0 var(--space-5); font-size: var(--font-size-base); font-weight: var(--font-weight-bold); display: flex; align-items: center; gap: var(--space-2); }
+
+      .form-patient-name {
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        color: var(--primary);
+        background: rgba(var(--primary-rgb), 0.06);
+        padding: var(--space-1) var(--space-2);
+        border-radius: var(--radius-full);
+        margin-left: auto;
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .no-patient-selected {
+        text-align: center;
+        padding: var(--space-8) var(--space-4);
+        color: var(--text-muted);
+
+        .no-patient-icon {
+          font-size: 3rem;
+          opacity: 0.3;
+          margin-bottom: var(--space-3);
+        }
+
+        p {
+          margin: 0;
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-medium);
+        }
+      }
 
       .checkin-form {
         .form-group {
@@ -578,8 +850,13 @@
     .checkin-info-header .checkin-info-item { gap: var(--space-1); }
     .checkin-info-header .checkin-info-item .info-label { display: none; }
     .checkin-info-header .checkin-info-divider { height: 20px; }
+    .checkin-summary-bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); flex-wrap: wrap; }
+    .checkin-summary-bar .summary-item .summary-label { font-size: 0.6rem; }
+    .checkin-summary-bar .summary-item .summary-value { font-size: 1rem; }
+    .checkin-summary-bar .summary-divider { height: 20px; }
     .left-panel .patient-card { padding: var(--space-5); }
     .left-panel .patient-card .patient-details-grid { grid-template-columns: 1fr 1fr; }
+    .left-panel .queue-card .queue-list { font-size: var(--font-size-xs); }
     .left-panel .queue-card .queue-steps { flex-wrap: nowrap; overflow-x: auto; }
     .left-panel .queue-card .queue-steps .queue-step { flex-shrink: 0; }
   }
@@ -597,8 +874,20 @@
     .checkin-info-header { padding: var(--space-2) var(--space-2); border-radius: var(--radius); }
     .checkin-info-header .checkin-info-item .info-icon { font-size: 0.85rem; }
     .checkin-info-header .checkin-info-item .info-value { font-size: 0.75rem; }
+    .checkin-summary-bar { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+    .checkin-summary-bar .summary-item .summary-icon { font-size: 1rem; }
+    .checkin-summary-bar .summary-item .summary-label { font-size: 0.55rem; }
+    .checkin-summary-bar .summary-item .summary-value { font-size: 0.9rem; min-width: 18px; }
+    .checkin-summary-bar .summary-divider { height: 18px; }
     .checkin-layout { gap: var(--space-4); }
     .left-panel { gap: var(--space-4); }
+    .left-panel .patient-list-card { border-radius: var(--radius-lg); }
+    .left-panel .patient-list-card .patient-list-header { padding: var(--space-2) var(--space-3); }
+    .left-panel .patient-list-card .patient-list-header h3 { font-size: 0.8rem; }
+    .left-panel .patient-list-card .patient-list-table thead th { font-size: 0.58rem; padding: var(--space-1) var(--space-2); }
+    .left-panel .patient-list-card .patient-list-table tbody td { font-size: 0.72rem; padding: var(--space-1) var(--space-2); }
+    .left-panel .patient-list-card .patient-list-table tbody td .patient-cell .patient-avatar-sm { width: 22px; height: 22px; svg { font-size: 0.7rem; } }
+    .left-panel .patient-list-card .patient-list-table tbody td .status-badge { font-size: 0.58rem; padding: 2px 6px; }
     .left-panel .patient-card { padding: var(--space-3); border-radius: var(--radius-lg); }
     .left-panel .patient-card .patient-header { gap: var(--space-2); }
     .left-panel .patient-card .patient-header .patient-avatar { width: 36px; height: 36px; svg { font-size: 1.1rem; } }
@@ -613,6 +902,8 @@
     .left-panel .queue-card .queue-display .queue-position, .left-panel .queue-card .queue-display .queue-estimated { padding: var(--space-3); }
     .left-panel .queue-card .queue-display .queue-position .position-number { font-size: 1.5rem; }
     .left-panel .queue-card .queue-display .queue-estimated .time { font-size: 1.2rem; }
+    .left-panel .queue-card .queue-list { font-size: 0.7rem; }
+    .left-panel .queue-card .queue-list .queue-list-item { padding: var(--space-1) var(--space-2); }
     .left-panel .queue-card .queue-steps { padding: var(--space-2); }
     .left-panel .queue-card .queue-steps .queue-step { font-size: 0.6rem; padding: var(--space-1) var(--space-1); }
     .left-panel .digital-token-card { padding: var(--space-4); border-radius: var(--radius-lg); }
@@ -622,6 +913,9 @@
     .left-panel .digital-token-card .token-body .token-details .token-row { font-size: 0.72rem; }
     .right-panel .checkin-form-card { padding: var(--space-4); border-radius: var(--radius-lg); }
     .right-panel .checkin-form-card h2 { font-size: 0.9rem; }
+    .right-panel .checkin-form-card .form-patient-name { font-size: 0.65rem; max-width: 100px; }
+    .right-panel .checkin-form-card .no-patient-selected { padding: var(--space-6) var(--space-3); }
+    .right-panel .checkin-form-card .no-patient-selected .no-patient-icon { font-size: 2rem; }
     .right-panel .checkin-form-card .checkin-form .form-group input,
     .right-panel .checkin-form-card .checkin-form .form-group textarea { padding: var(--space-2) var(--space-3); font-size: 0.8rem; }
     .right-panel .checkin-form-card .checkin-form .form-group .btn-send-otp,

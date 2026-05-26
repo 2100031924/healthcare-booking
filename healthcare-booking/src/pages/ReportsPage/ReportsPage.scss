@@ -241,6 +241,11 @@
         height: 180px;
         padding-top: var(--space-4);
 
+        @media (max-width: 480px) {
+          height: 140px;
+          gap: var(--space-1);
+        }
+
         .bar-item {
           flex: 1;
           display: flex;
